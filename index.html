@@ -16,6 +16,12 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            cursor: none !important;
+        }
+
         body {
             background: var(--bg);
             color: var(--text);
@@ -24,12 +30,14 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
-            cursor: none;
+            position: relative;
         }
 
+        /* КАСТОМНЫЙ КУРСОР — ТОЧНО ПО МЫШКЕ */
         .cursor {
             position: fixed;
+            top: 0;
+            left: 0;
             width: 20px;
             height: 20px;
             background: var(--neon);
@@ -37,9 +45,11 @@
             pointer-events: none;
             z-index: 9999;
             box-shadow: var(--glow);
-            transition: transform 0.1s ease;
+            transition: transform 0.12s ease, width 0.2s ease, height 0.2s ease;
+            transform: translate(-50%, -50%);
             mix-blend-mode: difference;
         }
+
         .cursor::after {
             content: '';
             position: absolute;
@@ -48,6 +58,12 @@
             background: white;
             border-radius: 50%;
             transform: translate(-50%, -50%);
+        }
+
+        .cursor.hover {
+            width: 36px;
+            height: 36px;
+            box-shadow: 0 0 25px var(--neon), 0 0 40px var(--neon);
         }
 
         .container {
@@ -93,9 +109,10 @@
 
         .links {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             justify-content: center;
             margin-top: 24px;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -111,9 +128,12 @@
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 6px 16px rgba(0, 212, 255, 0.3), 0 0 0 1px rgba(0, 212, 255, 0.2);
-            min-width: 140px;
+            min-width: 120px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
 
         .btn::before {
@@ -142,6 +162,15 @@
 
         .btn.donate:hover {
             box-shadow: 0 20px 40px rgba(255, 0, 136, 0.5);
+        }
+
+        .btn.heroku {
+            background: linear-gradient(135deg, #6567fc, #7b68ee);
+            box-shadow: 0 6px 16px rgba(101, 103, 252, 0.3);
+        }
+
+        .btn.heroku:hover {
+            box-shadow: 0 20px 40px rgba(101, 103, 252, 0.5);
         }
 
         .modal {
@@ -199,6 +228,7 @@
 </head>
 <body>
 
+    <!-- КАСТОМНЫЙ КУРСОР -->
     <div class="cursor"></div>
 
     <div class="container">
@@ -212,6 +242,7 @@
 
         <div class="links">
             <a href="https://t.me/devodrag" class="btn" target="_blank">Telegram</a>
+            <a href="https://t.me/heroku_ub" class="btn heroku" target="_blank">Heroku</a>
             <button class="btn donate" onclick="openDonate()">Donate</button>
         </div>
     </div>
@@ -237,19 +268,40 @@
     </div>
 
     <script>
+        // Модалки
         function openDonate() { document.getElementById('donateModal').classList.add('show'); }
         function closeDonate() { document.getElementById('donateModal').classList.remove('show'); }
         function openXRocket() { closeDonate(); setTimeout(() => document.getElementById('xrocketModal').classList.add('show'), 200); }
         function closeXRocket() { document.getElementById('xrocketModal').classList.remove('show'); }
         window.addEventListener('click', e => { if (e.target.classList.contains('modal')) closeDonate(), closeXRocket(); });
 
+        // КУРСОР — ТОЧНО ПО МЫШКЕ, БЕЗ СМЕЩЕНИЯ
         const cursor = document.querySelector('.cursor');
+        let mouseX = 0, mouseY = 0;
+
         document.addEventListener('mousemove', e => {
-            cursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
         });
+
+        // Плавное следование
+        function updateCursor() {
+            const currentX = parseFloat(cursor.style.left) || 0;
+            const currentY = parseFloat(cursor.style.top) || 0;
+            const dx = mouseX - currentX;
+            const dy = mouseY - currentY;
+            cursor.style.left = (currentX + dx * 0.2) + 'px';
+            cursor.style.top = (currentY + dy * 0.2) + 'px';
+            requestAnimationFrame(updateCursor);
+        }
+        requestAnimationFrame(updateCursor);
+
+        // Hover эффект
         document.querySelectorAll('.btn, .close').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.style.transform += ' scale(2)');
-            el.addEventListener('mouseleave', () => cursor.style.transform = cursor.style.transform.replace(' scale(2)', ''));
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
     </script>
 </body>
