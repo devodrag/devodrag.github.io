@@ -9,7 +9,6 @@
 </head>
 <body>
 
-    <!-- Кастомный курсор -->
     <div class="cursor"></div>
 
     <div class="container">
@@ -18,9 +17,7 @@
         <p class="location">Russia</p>
 
         <div class="info">
-            <p><strong>Nickname:</strong> devodrag</p>
-            <p><strong>Languages:</strong> Python, JS, TS, HTML, CSS</p>
-            <p><strong>Uses:</strong> Heroku Userbot</p>
+            <p>i use heroku userbot</p>
         </div>
 
         <div class="links">
@@ -33,42 +30,25 @@
         </div>
     </div>
 
-    <!-- Donate Modal -->
-    <div id="donateModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeDonate()">x</span>
-            <h3>Donate via</h3>
-            <a href="https://t.me/send?start=IVZIFRT5CKMx" class="btn modal-btn" target="_blank">CryptoBot</a>
-            <button class="btn modal-btn" onclick="openXRocket()">xRocket</button>
-        </div>
-    </div>
-
-    <!-- xRocket Submenu -->
-    <div id="xrocketModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeXRocket()">x</span>
-            <h3>xRocket</h3>
-            <a href="https://t.me/xrocket?start=inv_Rnhh88Q1gY7AxsR" class="btn modal-btn" target="_blank">USDT</a>
-            <a href="https://t.me/xrocket?start=inv_ip2bPuPJK0MNYFU" class="btn modal-btn" target="_blank">TON</a>
-        </div>
-    </div>
+    <!-- Модалки -->
+    <div id="donateModal" class="modal">...</div>
+    <div id="xrocketModal" class="modal">...</div>
 
     <script>
-        // Модалки
+        // (JS модалок и курсора — как раньше)
         function openDonate() { document.getElementById('donateModal').classList.add('show'); }
         function closeDonate() { document.getElementById('donateModal').classList.remove('show'); }
         function openXRocket() { closeDonate(); setTimeout(() => document.getElementById('xrocketModal').classList.add('show'), 200); }
         function closeXRocket() { document.getElementById('xrocketModal').classList.remove('show'); }
         window.addEventListener('click', e => { if (e.target.classList.contains('modal')) closeDonate(), closeXRocket(); });
 
-        // Кастомный курсор
         const cursor = document.querySelector('.cursor');
         document.addEventListener('mousemove', e => {
             cursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
         });
         document.querySelectorAll('.btn, .close').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.style.transform += ' scale(1.8)');
-            el.addEventListener('mouseleave', () => cursor.style.transform = cursor.style.transform.replace(' scale(1.8)', ''));
+            el.addEventListener('mouseenter', () => cursor.style.transform += ' scale(2)');
+            el.addEventListener('mouseleave', () => cursor.style.transform = cursor.style.transform.replace(' scale(2)', ''));
         });
     </script>
 </body>
