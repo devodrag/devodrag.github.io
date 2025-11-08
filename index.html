@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>devodrag</title>
+    <title>devodrag bio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
@@ -12,6 +12,15 @@
             --bg: #0a0a0a;
             --card: #111;
             --text: #e0f7ff;
+            --glow: 0 0 15px var(--neon), 0 0 30px var(--neon);
+        }
+
+        [data-theme="orange"] {
+            --neon: #ff6b00;
+            --neon-dark: #cc5500;
+            --bg: #0a0400;
+            --card: #110800;
+            --text: #ffe0cc;
             --glow: 0 0 15px var(--neon), 0 0 30px var(--neon);
         }
 
@@ -31,6 +40,7 @@
             align-items: center;
             min-height: 100vh;
             position: relative;
+            transition: background 0.5s ease;
         }
 
         .cursor {
@@ -42,7 +52,7 @@
             pointer-events: none;
             z-index: 9999;
             box-shadow: var(--glow);
-            transition: width 0.2s ease, height 0.2s ease;
+            transition: width 0.2s ease, height 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
             transform: translate(-50%, -50%);
             mix-blend-mode: difference;
         }
@@ -68,14 +78,22 @@
             padding: 40px 30px;
             background: var(--card);
             border-radius: 20px;
-            border: 1px solid rgba(0, 212, 255, 0.3);
+            border: 1px solid rgba(255, 107, 0, 0.3);
             box-shadow: 
-                0 0 30px rgba(0, 212, 255, 0.2),
-                0 0 0 1px rgba(0, 212, 255, 0.1);
+                0 0 30px rgba(255, 107, 0, 0.2),
+                0 0 0 1px rgba(255, 107, 0, 0.1);
             max-width: 380px;
             position: relative;
             z-index: 1;
             animation: pulseGlow 3s infinite alternate ease-in-out;
+            transition: background 0.5s ease, border 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        [data-theme="orange"] .container {
+            border: 1px solid rgba(255, 107, 0, 0.3);
+            box-shadow: 
+                0 0 30px rgba(255, 107, 0, 0.2),
+                0 0 0 1px rgba(255, 107, 0, 0.1);
         }
 
         @keyframes pulseGlow {
@@ -91,6 +109,19 @@
             }
         }
 
+        [data-theme="orange"] @keyframes pulseGlow {
+            0% {
+                box-shadow: 
+                    0 0 30px rgba(255, 107, 0, 0.2),
+                    0 0 0 1px rgba(255, 107, 0, 0.1);
+            }
+            100% {
+                box-shadow: 
+                    0 0 35px rgba(255, 107, 0, 0.25),
+                    0 0 0 1px rgba(255, 107, 0, 0.15);
+            }
+        }
+
         .container::before {
             content: '';
             position: absolute;
@@ -100,6 +131,7 @@
             opacity: 0.15;
             z-index: -1;
             animation: borderPulse 4s infinite ease-in-out;
+            transition: background 0.5s ease;
         }
 
         @keyframes borderPulse {
@@ -114,6 +146,7 @@
             border: 3px solid var(--neon);
             box-shadow: var(--glow);
             margin-bottom: 16px;
+            transition: border 0.5s ease, box-shadow 0.5s ease;
         }
 
         h1 {
@@ -121,12 +154,18 @@
             color: white;
             text-shadow: 0 0 10px var(--neon);
             margin: 0 0 8px;
+            transition: text-shadow 0.5s ease;
         }
 
         .location {
             color: #88ccff;
             font-size: 0.9em;
             margin-bottom: 20px;
+            transition: color 0.5s ease;
+        }
+
+        [data-theme="orange"] .location {
+            color: #ff9966;
         }
 
         .info p {
@@ -134,6 +173,11 @@
             font-size: 0.95em;
             margin: 0;
             text-shadow: 0 0 5px var(--neon);
+            transition: color 0.5s ease, text-shadow 0.5s ease;
+        }
+
+        [data-theme="orange"] .info p {
+            color: #ffccaa;
         }
 
         .links {
@@ -153,9 +197,9 @@
             border: none;
             border-radius: 16px;
             cursor: none;
-            position: relative;
+            position: relative üle;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
             box-shadow: 0 6px 16px rgba(0, 212, 255, 0.3), 0 0 0 1px rgba(0, 212, 255, 0.2);
             min-width: 120px;
             text-transform: uppercase;
@@ -163,6 +207,11 @@
             text-decoration: none;
             display: inline-block;
             text-align: center;
+        }
+
+        [data-theme="orange"] .btn {
+            background: linear-gradient(135deg, #cc5500, #ff6b00);
+            box-shadow: 0 6px 16px rgba(255, 107, 0, 0.3), 0 0 0 1px rgba(255, 107, 0, 0.2);
         }
 
         .btn:active {
@@ -182,6 +231,10 @@
         .btn:hover {
             transform: translateY(-8px) scale(1.08);
             box-shadow: 0 20px 40px rgba(0, 212, 255, 0.5), 0 0 0 2px var(--neon);
+        }
+
+        [data-theme="orange"] .btn:hover {
+            box-shadow: 0 20px 40px rgba(255, 107, 0, 0.5), 0 0 0 2px var(--neon);
         }
 
         .btn:hover::before {
@@ -204,6 +257,30 @@
 
         .btn.heroku:hover {
             box-shadow: 0 20px 40px rgba(106, 90, 205, 0.5);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--card);
+            border: 1px solid var(--neon);
+            color: var(--neon);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            cursor: none;
+            z-index: 100;
+            transition: all 0.4s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--neon);
         }
 
         .modal {
@@ -239,7 +316,7 @@
             box-shadow: var(--glow);
             transform: scale(0.7);
             opacity: 0;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease, background 0.5s ease, border 0.5s ease;
         }
 
         .modal.show .modal-content {
@@ -253,12 +330,14 @@
             font-size: 26px;
             color: var(--neon);
             cursor: none;
+            transition: color 0.5s ease;
         }
 
         .modal-btn {
             display: block;
             width: 100%;
             margin: 10px 0;
+            transition: background 0.5s ease;
         }
 
         @media (max-width: 480px) {
@@ -266,12 +345,17 @@
             h1 { font-size: 2em; }
             .links { flex-direction: column; align-items: center; gap: 12px; }
             .btn { width: 100%; max-width: 200px; }
+            .theme-toggle { top: 15px; right: 15px; }
         }
     </style>
 </head>
 <body>
 
     <div class="cursor"></div>
+
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-adjust"></i>
+    </button>
 
     <div class="container">
         <img src="avatar.jpg" alt="devodrag" class="avatar">
@@ -284,7 +368,7 @@
 
         <div class="links">
             <a href="https://t.me/devodrag" class="btn" target="_blank">Telegram</a>
-            <a href="https://t.me/heroku_ub" class="btn heroku" target="_blank">Heroku</a>
+            <a href="https://t.me/heroku_ub" class="btn hereksi" target="_blank">Heroku</a>
             <button class="btn donate" onclick="openDonate()">Donate</button>
         </div>
     </div>
@@ -308,6 +392,11 @@
     </div>
 
     <script>
+        function toggleTheme() {
+            document.documentElement.dataset.theme = 
+                document.documentElement.dataset.theme === 'orange' ? '' : 'orange';
+        }
+
         function openDonate() { document.getElementById('donateModal').classList.add('show'); }
         function closeDonate() { document.getElementById('donateModal').classList.remove('show'); }
         function openXRocket() { 
@@ -341,7 +430,7 @@
             requestAnimationFrame(updateCursor);
         });
 
-        document.querySelectorAll('.btn, .close').forEach(el => {
+        document.querySelectorAll('.btn, .close, .theme-toggle').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
