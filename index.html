@@ -141,19 +141,22 @@
             transition: text-shadow 0.5s ease;
         }
 
+        .location,
+        .info p {
+            color: var(--text);
+            transition: color 0.3s ease;
+        }
+
         .location {
-            color: #88ccff;
             font-size: 0.9em;
             margin-bottom: 20px;
-            transition: color 0.5s ease;
         }
 
         .info p {
-            color: #a0eaff;
             font-size: 0.95em;
             margin: 0;
             text-shadow: 0 0 5px var(--neon);
-            transition: color 0.5s ease, text-shadow 0.5s ease;
+            transition: color 0.3s ease, text-shadow 0.5s ease;
         }
 
         .links {
@@ -244,7 +247,9 @@
             right: 20px;
             width: 200px;
             height: 200px;
-            background: radial-gradient(circle, #fff 10%, transparent 10%), conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+            background: 
+                radial-gradient(circle at center, white 10%, transparent 11%),
+                conic-gradient(from 0deg, red, yellow, lime, cyan, blue, magenta, red);
             border-radius: 50%;
             border: 3px solid var(--card);
             box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 0 2px var(--neon);
@@ -432,8 +437,9 @@
             const rgbaShadow = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`;
             const rgbaShadowEnd = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)`;
 
-            // Теперь меняется и цвет текста
-            const textColor = `hsl(${rgbToHsl(rgb.r, rgb.g, rgb.b)[0]}, 70%, 85%)`;
+            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+            const textColor = `hsl(${hsl[0]}, 70%, 85%)`;
+
             document.documentElement.style.setProperty('--neon', color);
             document.documentElement.style.setProperty('--neon-dark', darker);
             document.documentElement.style.setProperty('--border-color', rgba);
@@ -470,7 +476,6 @@
             return "#"+RR+GG+BB;
         };
 
-        // RGB → HSL
         const rgbToHsl = (r, g, b) => {
             r /= 255; g /= 255; b /= 255;
             const max = Math.max(r, g, b), min = Math.min(r, g, b);
@@ -490,19 +495,56 @@
             return [h * 360, s * 100, l * 100];
         };
 
-        // === ПАЛИТРА + МГНОВЕННОЕ ПРИМЕНЕНИЕ + РАЗМЫТИЕ ===
+        // === ПАЛИТРА: ТОЧНОЕ СЧИТЫВАНИЕ ЦВЕТА ПО КООРДИНАТАМ ===
         const palette = document.getElementById('colorPalette');
         const dot = document.getElementById('colorDot');
         const toggleBtn = document.getElementById('themeToggle');
         const body = document.body;
 
         let isDragging = false;
+        let canvas, ctx;
+
+        // Создаём canvas для точного чтения цвета
+        const initCanvas = () => {
+            canvas = document.createElement('canvas');
+            canvas.width = 200;
+            canvas.height = 200;
+            ctx = canvas.getContext('2d');
+            // Рисуем палитру на canvas
+            const grad = ctx.createConicGradient(0, 100, 100);
+            grad.addColorStop(0, 'red');
+            grad.addColorStop(1/6, 'yellow');
+            grad.addColorStop(2/6, 'lime');
+            grad.addColorStop(3/6, 'cyan');
+            grad.addColorStop(4/6, 'blue');
+            grad.addColorStop(5/6, 'magenta');
+            grad.addColorStop(1, 'red');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 200, 200);
+
+            // Белый центр
+            const radGrad = ctx.createRadialGradient(100, 100, 0, 100, 100, 80);
+            radGrad.addColorStop(0, 'white');
+            radGrad.addColorStop(1, 'transparent');
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = radGrad;
+            ctx.beginPath();
+            ctx.arc(100, 100, 80, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+        };
+
+        const getColorAtPoint = (x, y) => {
+            const pixel = ctx.getImageData(x, y, 1, 1).data;
+            return `#${((1 << 24) + (pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).slice(1)}`;
+        };
 
         toggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             const isOpen = palette.classList.toggle('show');
             body.classList.toggle('blur', isOpen);
             body.classList.toggle('show-blur', isOpen);
+            if (isOpen && !canvas) initCanvas();
             if (!isOpen) isDragging = false;
         });
 
@@ -522,10 +564,10 @@
                 dot.style.left = `${clampedX + rect.width / 2}px`;
                 dot.style.top = `${clampedY + rect.height / 2}px`;
 
-                const angle = Math.atan2(clampedY, clampedX) * 180 / Math.PI + 180;
-                const saturation = Math.min(distance / maxRadius, 1) * 100;
-                const hue = angle;
-                const color = hslToHex(hue, saturation, 50);
+                // Точное чтение цвета из canvas
+                const canvasX = (clampedX + rect.width / 2) * (200 / rect.width);
+                const canvasY = (clampedY + rect.height / 2) * (200 / rect.height);
+                const color = getColorAtPoint(canvasX, canvasY);
 
                 updateCSSVariables(color);
             }
@@ -549,17 +591,6 @@
         });
 
         palette.addEventListener('click', updatePicker);
-
-        const hslToHex = (h, s, l) => {
-            l /= 100;
-            const a = s * Math.min(l, 1 - l) / 100;
-            const f = n => {
-                const k = (n + h / 30) % 12;
-                const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-                return Math.round(255 * color).toString(16).padStart(2, '0');
-            };
-            return `#${f(0)}${f(8)}${f(4)}`;
-        };
 
         // === МОДАЛЬНЫЕ ОКНА ===
         function openDonate() { 
