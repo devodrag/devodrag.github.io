@@ -133,6 +133,10 @@
             text-align: center;
         }
 
+        .btn:active {
+            transform: translateY(-8px) scale(1.08) scale(0.95);
+        }
+
         .btn::before {
             content: '';
             position: absolute;
@@ -181,12 +185,14 @@
             align-items: center;
             z-index: 1000;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
         }
 
         .modal.show {
             display: flex;
             opacity: 1;
+            visibility: visible;
         }
 
         .modal-content {
@@ -199,6 +205,14 @@
             width: 90%;
             max-width: 320px;
             box-shadow: var(--glow);
+            transform: scale(0.7);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+            opacity: 1;
         }
 
         .close {
@@ -264,7 +278,10 @@
     <script>
         function openDonate() { document.getElementById('donateModal').classList.add('show'); }
         function closeDonate() { document.getElementById('donateModal').classList.remove('show'); }
-        function openXRocket() { closeDonate(); setTimeout(() => document.getElementById('xrocketModal').classList.add('show'), 200); }
+        function openXRocket() { 
+            closeDonate(); 
+            setTimeout(() => document.getElementById('xrocketModal').classList.add('show'), 100); 
+        }
         function closeXRocket() { document.getElementById('xrocketModal').classList.remove('show'); }
         window.addEventListener('click', e => { if (e.target.classList.contains('modal')) closeDonate(), closeXRocket(); });
 
