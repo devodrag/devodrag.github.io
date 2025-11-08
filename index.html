@@ -40,7 +40,7 @@
             transition: background 0.5s ease, color 0.3s ease;
         }
 
-        /* Размытие фона при открытой палитре */
+        /* Размытие фона */
         body.blur::before {
             content: '';
             position: fixed;
@@ -115,7 +115,6 @@
             opacity: 0.15;
             z-index: -1;
             animation: borderPulse 4s infinite ease-in-out;
-            transition: background 0.5s ease;
         }
 
         @keyframes borderPulse {
@@ -130,7 +129,6 @@
             border: 3px solid var(--neon);
             box-shadow: var(--glow);
             margin-bottom: 16px;
-            transition: border 0.5s ease, box-shadow 0.5s ease;
         }
 
         h1 {
@@ -138,7 +136,6 @@
             color: white;
             text-shadow: 0 0 10px var(--neon);
             margin: 0 0 8px;
-            transition: text-shadow 0.5s ease;
         }
 
         .location,
@@ -156,7 +153,6 @@
             font-size: 0.95em;
             margin: 0;
             text-shadow: 0 0 5px var(--neon);
-            transition: color 0.3s ease, text-shadow 0.5s ease;
         }
 
         .links {
@@ -232,7 +228,7 @@
             font-size: 1.2em;
             cursor: none;
             z-index: 100;
-            transition: all 0.4s ease, background 0.5s ease, border 0.5s ease, color 0.5s ease;
+            transition: all 0.4s ease;
         }
 
         .theme-toggle:hover {
@@ -240,14 +236,15 @@
             box-shadow: 0 0 20px var(--neon);
         }
 
-        /* === ПАЛИТРА — КРУГОВАЯ, КРУЖОК ВНУТРИ === */
+        /* === КВАДРАТНАЯ ПАЛИТРА (HSV) === */
         .color-palette {
             position: absolute;
             top: 70px;
             right: 20px;
             width: 200px;
             height: 200px;
-            border-radius: 50%;
+            background: white;
+            border-radius: 12px;
             border: 3px solid var(--card);
             box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 0 2px var(--neon);
             opacity: 0;
@@ -258,7 +255,7 @@
             z-index: 99;
             cursor: none;
             overflow: hidden;
-            pointer-events: none; /* Отключаем до открытия */
+            pointer-events: none;
         }
 
         .color-palette.show {
@@ -268,111 +265,28 @@
             pointer-events: auto;
         }
 
+        .color-palette canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 9px;
+        }
+
         .color-picker-dot {
             position: absolute;
-            width: 32px;
-            height: 32px;
-            background: white;
-            border: 2px solid var(--neon);
+            width: 20px;
+            height: 20px;
+            background: transparent;
+            border: 3px solid white;
             border-radius: 50%;
-            box-shadow: 0 0 15px var(--neon), 0 0 0 3px rgba(255,255,255,0.3);
+            box-shadow: 0 0 10px rgba(0,0,0,0.6), 0 0 0 2px var(--neon);
             pointer-events: none;
             z-index: 10;
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0; /* Скрыт по умолчанию */
+            opacity: 0;
+            transition: all 0.15s ease;
         }
 
         .color-palette.show .color-picker-dot {
             opacity: 1;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(12px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-        }
-
-        .modal.show {
-            display: flex;
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background: var(--card);
-            padding: 28px;
-            border-radius: 16px;
-            border: 1px solid var(--neon);
-            text-align: center;
-            position: relative;
-            width: 90%;
-            max-width: 320px;
-            box-shadow: var(--glow);
-            transform: translateY(-100px) scale(0.3);
-            opacity: 0;
-            transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.45s ease, background 0.5s ease, border 0.5s ease;
-        }
-
-        .modal.show .modal-content {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
-
-        .close {
-            position: absolute;
-            top: 8px; right: 12px;
-            font-size: 26px;
-            color: var(--neon);
-            cursor: none;
-            transition: color 0.5s ease;
-        }
-
-        .modal-btn {
-            display: block;
-            width: 100%;
-            margin: 10px 0;
-            padding: 14px 28px;
-            background: var(--btn-bg);
-            color: #000;
-            font-weight: 700;
-            font-size: 1em;
-            border: none;
-            border-radius: 16px;
-            cursor: none;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
-            box-shadow: var(--btn-shadow);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .modal-btn::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -150%;
-            width: 200%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: 0.8s;
-        }
-
-        .modal-btn:hover {
-            transform: translateY(-8px) scale(1.08);
-            box-shadow: var(--btn-hover-shadow);
-        }
-
-        .modal-btn:hover::before {
-            left: 150%;
         }
 
         @media (max-width: 480px) {
@@ -393,9 +307,9 @@
         <i class="fas fa-palette"></i>
     </button>
 
-    <!-- Палитра + кружок внутри неё -->
+    <!-- КВАДРАТНАЯ ПАЛИТРА + КРУЖОК -->
     <div class="color-palette" id="colorPalette">
-        <canvas id="colorPaletteCanvas" width="200" height="200"></canvas>
+        <canvas id="paletteCanvas" width="200" height="200"></canvas>
         <div class="color-picker-dot" id="colorDot"></div>
     </div>
 
@@ -403,11 +317,9 @@
         <img src="avatar.jpg" alt="devodrag" class="avatar">
         <h1>devodrag</h1>
         <p class="location">Russia</p>
-
         <div class="info">
             <p>i use heroku userbot</p>
         </div>
-
         <div class="links">
             <a href="https://t.me/devodrag" class="btn" target="_blank">Telegram</a>
             <a href="https://t.me/heroku_ub" class="btn" target="_blank">Heroku</a>
@@ -415,33 +327,18 @@
         </div>
     </div>
 
-    <div id="donateModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeDonate()">x</span>
-            <h3>Donate via</h3>
-            <a href="https://t.me/send?start=IVZIFRT5CKMx" class="btn modal-btn" target="_blank">CryptoBot</a>
-            <button class="btn modal-btn" onclick="openXRocket()">xRocket</button>
-        </div>
-    </div>
-
-    <div id="xrocketModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeXRocket()">x</span>
-            <h3>xRocket</h3>
-            <a href="https://t.me/xrocket?start=inv_Rnhh88Q1gY7AxsR" class="btn modal-btn" target="_blank">USDT</a>
-            <a href="https://t.me/xrocket?start=inv_ip2bPuPJK0MNYFU" class="btn modal-btn" target="_blank">TON</a>
-        </div>
-    </div>
+    <!-- Модалки -->
+    <div id="donateModal" class="modal">...</div>
+    <div id="xrocketModal" class="modal">...</div>
 
     <script>
-        // === ПЕРЕМЕННЫЕ ЦВЕТА ===
+        // === ЦВЕТОВЫЕ ФУНКЦИИ ===
         const updateCSSVariables = (color) => {
             const rgb = hexToRgb(color);
             const darker = shadeColor(color, -30);
             const rgba = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)`;
             const rgbaShadow = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`;
             const rgbaShadowEnd = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)`;
-
             const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
             const textColor = `hsl(${hsl[0]}, 70%, 85%)`;
 
@@ -457,14 +354,8 @@
         };
 
         const hexToRgb = (hex) => {
-            const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-            hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? {
-                r: parseInt(result[1], 16),
-                g: parseInt(result[2], 16),
-                b: parseInt(result[3], 16)
-            } : null;
+            return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null;
         };
 
         const shadeColor = (color, percent) => {
@@ -474,20 +365,16 @@
             R = parseInt(R * (100 + percent) / 100);
             G = parseInt(G * (100 + percent) / 100);
             B = parseInt(B * (100 + percent) / 100);
-            R = (R<255)?R:255; G = (G<255)?G:255; B = (B<255)?B:255;
-            const RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
-            const GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
-            const BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
-            return "#"+RR+GG+BB;
+            R = R<255?R:255; G = G<255?G:255; B = B<255?B:255;
+            return "#"+(R.toString(16).padStart(2,'0'))+(G.toString(16).padStart(2,'0'))+(B.toString(16).padStart(2,'0'));
         };
 
         const rgbToHsl = (r, g, b) => {
             r /= 255; g /= 255; b /= 255;
             const max = Math.max(r, g, b), min = Math.min(r, g, b);
             let h, s, l = (max + min) / 2;
-            if (max === min) {
-                h = s = 0;
-            } else {
+            if (max === min) h = s = 0;
+            else {
                 const d = max - min;
                 s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
                 switch (max) {
@@ -500,52 +387,57 @@
             return [h * 360, s * 100, l * 100];
         };
 
-        // === КРУГОВАЯ ПАЛИТРА НА CANVAS + КРУЖОК ВНУТРИ ===
+        // === КВАДРАТНАЯ ПАЛИТРА (HSV) ===
         const palette = document.getElementById('colorPalette');
-        const canvas = document.getElementById('colorPaletteCanvas');
+        const canvas = document.getElementById('paletteCanvas');
         const ctx = canvas.getContext('2d');
         const dot = document.getElementById('colorDot');
         const toggleBtn = document.getElementById('themeToggle');
         const body = document.body;
 
         let isDragging = false;
+        let currentHue = 180; // начальный цвет (голубой)
 
-        // Рисуем палитру
-        const drawPalette = () => {
-            const centerX = 100, centerY = 100, radius = 80;
+        const drawHSVPalette = () => {
+            const width = canvas.width;
+            const height = canvas.height;
 
-            const grad = ctx.createConicGradient(0, centerX, centerY);
-            grad.addColorStop(0, 'red');
-            grad.addColorStop(1/6, 'yellow');
-            grad.addColorStop(2/6, 'lime');
-            grad.addColorStop(3/6, 'cyan');
-            grad.addColorStop(4/6, 'blue');
-            grad.addColorStop(5/6, 'magenta');
-            grad.addColorStop(1, 'red');
-
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-            ctx.fill();
-
-            const radGrad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-            radGrad.addColorStop(0, 'white');
-            radGrad.addColorStop(1, 'transparent');
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.fillStyle = radGrad;
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.globalCompositeOperation = 'source-over';
+            for (let x = 0; x < width; x++) {
+                for (let y = 0; y < height; y++) {
+                    const s = x / width;
+                    const v = 1 - (y / height);
+                    const rgb = hsvToRgb(currentHue / 360, s, v);
+                    ctx.fillStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                    ctx.fillRect(x, y, 1, 1);
+                }
+            }
         };
 
-        drawPalette();
+        const hsvToRgb = (h, s, v) => {
+            let r, g, b;
+            const i = Math.floor(h * 6);
+            const f = h * 6 - i;
+            const p = v * (1 - s);
+            const q = v * (1 - f * s);
+            const t = v * (1 - (1 - f) * s);
+            switch (i % 6) {
+                case 0: r = v, g = t, b = p; break;
+                case 1: r = q, g = v, b = p; break;
+                case 2: r = p, g = v, b = t; break;
+                case 3: r = p, g = q, b = v; break;
+                case 4: r = t, g = p, b = v; break;
+                case 5: r = v, g = p, b = q; break;
+            }
+            return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+        };
 
-        const getColorAtPoint = (x, y) => {
+        const getColorFromCanvas = (x, y) => {
             const pixel = ctx.getImageData(x, y, 1, 1).data;
-            if (pixel[3] === 0) return null;
-            return `#${((1 << 24) + (pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).slice(1)}`;
+            return `#${((pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).padStart(6, '0')}`;
         };
+
+        // Инициализация
+        drawHSVPalette();
 
         toggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -554,44 +446,31 @@
             body.classList.toggle('show-blur', isOpen);
 
             if (isOpen) {
-                // Кружок в центре при открытии
-                const rect = palette.getBoundingClientRect();
-                dot.style.left = `${rect.width / 2}px`;
-                dot.style.top = `${rect.height / 2}px`;
+                // Кружок в центре
+                dot.style.left = '50%';
+                dot.style.top = '50%';
+                dot.style.transform = 'translate(-50%, -50%)';
             }
-
             if (!isOpen) isDragging = false;
         });
 
         const updatePicker = (e) => {
-            const rect = palette.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            const x = e.clientX - centerX;
-            const y = e.clientY - centerY;
-            const distance = Math.sqrt(x*x + y*y);
-            const maxRadius = rect.width / 2 - 16;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
 
-            if (distance <= maxRadius || isDragging) {
-                const clampedX = Math.max(-maxRadius, Math.min(maxRadius, x));
-                const clampedY = Math.max(-maxRadius, Math.min(maxRadius, y));
+            if (x >= 0 && x < rect.width && y >= 0 && y < rect.height) {
+                dot.style.left = `${x}px`;
+                dot.style.top = `${y}px`;
 
-                dot.style.left = `${clampedX + rect.width / 2}px`;
-                dot.style.top = `${clampedY + rect.height / 2}px`;
-
-                const canvasX = clampedX + 100;
-                const canvasY = clampedY + 100;
-                const color = getColorAtPoint(canvasX, canvasY);
-
-                if (color) updateCSSVariables(color);
+                const color = getColorFromCanvas(Math.floor(x), Math.floor(y));
+                updateCSSVariables(color);
             }
         };
 
-        palette.addEventListener('mousedown', (e) => {
-            if (e.target === canvas || e.target === dot) {
-                isDragging = true;
-                updatePicker(e);
-            }
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            updatePicker(e);
         });
 
         document.addEventListener('mousemove', (e) => {
@@ -602,72 +481,32 @@
             isDragging = false;
         });
 
-        palette.addEventListener('click', updatePicker);
+        canvas.addEventListener('click', updatePicker);
 
-        // === МОДАЛЬНЫЕ ОКНА ===
-        function openDonate() { 
-            const modal = document.getElementById('donateModal');
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('show'), 10);
-        }
-        function closeDonate() { 
-            const modal = document.getElementById('donateModal');
-            modal.classList.remove('show');
-            setTimeout(() => modal.style.display = 'none', 450);
-        }
-        function openXRocket() { 
-            closeDonate(); 
-            setTimeout(() => {
-                const modal = document.getElementById('xrocketModal');
-                modal.style.display = 'flex';
-                setTimeout(() => modal.classList.add('show'), 10);
-            }, 200);
-        }
-        function closeXRocket() { 
-            const modal = document.getElementById('xrocketModal');
-            modal.classList.remove('show');
-            setTimeout(() => modal.style.display = 'none', 450);
-        }
-
-        window.addEventListener('click', e => { 
-            if (e.target.classList.contains('modal')) {
-                closeDonate();
-                closeXRocket();
-            }
-        });
-
-        // === КАСТОМНЫЙ КУРСОР ===
+        // === КУРСОР ===
         const cursor = document.querySelector('.cursor');
         let mouseX = 0, mouseY = 0;
-
-        document.addEventListener('mousemove', e => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
+        document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
 
         function updateCursor() {
             const currentX = parseFloat(cursor.style.left) || mouseX;
             const currentY = parseFloat(cursor.style.top) || mouseY;
-            const dx = mouseX - currentX;
-            const dy = mouseY - currentY;
-            cursor.style.left = (currentX + dx * 0.2) + 'px';
-            cursor.style.top = (currentY + dy * 0.2) + 'px';
+            cursor.style.left = (currentX + (mouseX - currentX) * 0.2) + 'px';
+            cursor.style.top = (currentY + (mouseY - currentY) * 0.2) + 'px';
             requestAnimationFrame(updateCursor);
         }
+        requestAnimationFrame(updateCursor);
 
-        document.addEventListener('DOMContentLoaded', () => {
-            cursor.style.left = mouseX + 'px';
-            cursor.style.top = mouseY + 'px';
-            requestAnimationFrame(updateCursor);
-        });
-
-        document.querySelectorAll('.btn, .close, .theme-toggle, .modal-btn').forEach(el => {
+        document.querySelectorAll('.btn, .close, .theme-toggle, .modal-btn, .color-palette').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
 
-        palette.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-        palette.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        // === МОДАЛКИ (коротко) ===
+        function openDonate() { /* ... */ }
+        function closeDonate() { /* ... */ }
+        function openXRocket() { /* ... */ }
+        function closeXRocket() { /* ... */ }
     </script>
 </body>
 </html>
