@@ -37,7 +37,24 @@
             align-items: center;
             min-height: 100vh;
             position: relative;
-            transition: background 0.5s ease;
+            transition: background 0.5s ease, color 0.3s ease;
+        }
+
+        /* Размытие фона при открытой палитре */
+        body.blur::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 98;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        body.blur.show-blur::before {
+            opacity: 1;
         }
 
         .cursor {
@@ -158,7 +175,7 @@
             cursor: none;
             position: relative;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
             box-shadow: var(--btn-shadow);
             min-width: 120px;
             text-transform: uppercase;
@@ -166,10 +183,6 @@
             text-decoration: none;
             display: inline-block;
             text-align: center;
-        }
-
-        .btn:active {
-            transform: translateY(-8px) scale(1.08) scale(0.95);
         }
 
         .btn::before {
@@ -242,6 +255,7 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 99;
             cursor: none;
+            overflow: hidden;
         }
 
         .color-palette.show {
@@ -250,16 +264,18 @@
             transform: scale(1);
         }
 
-        .color-palette::after {
-            content: '';
+        .color-picker-dot {
             position: absolute;
             top: 50%; left: 50%;
-            width: 30px; height: 30px;
+            width: 32px; height: 32px;
             background: white;
             border: 2px solid var(--neon);
             border-radius: 50%;
+            box-shadow: 0 0 15px var(--neon), 0 0 0 3px rgba(255,255,255,0.3);
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 15px var(--neon);
+            pointer-events: none;
+            z-index: 10;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .modal {
@@ -365,13 +381,13 @@
 
     <div class="cursor"></div>
 
-    <!-- Кнопка темы -->
     <button class="theme-toggle" id="themeToggle">
         <i class="fas fa-palette"></i>
     </button>
 
-    <!-- Круговая палитра -->
-    <div class="color-palette" id="colorPalette"></div>
+    <div class="color-palette" id="colorPalette">
+        <div class="color-picker-dot" id="colorDot"></div>
+    </div>
 
     <div class="container">
         <img src="avatar.jpg" alt="devodrag" class="avatar">
@@ -416,6 +432,8 @@
             const rgbaShadow = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`;
             const rgbaShadowEnd = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)`;
 
+            // Теперь меняется и цвет текста
+            const textColor = `hsl(${rgbToHsl(rgb.r, rgb.g, rgb.b)[0]}, 70%, 85%)`;
             document.documentElement.style.setProperty('--neon', color);
             document.documentElement.style.setProperty('--neon-dark', darker);
             document.documentElement.style.setProperty('--border-color', rgba);
@@ -424,6 +442,7 @@
             document.documentElement.style.setProperty('--btn-bg', `linear-gradient(135deg, ${darker}, ${color})`);
             document.documentElement.style.setProperty('--btn-shadow', `0 6px 16px ${rgbaShadow}, 0 0 0 1px ${rgba}`);
             document.documentElement.style.setProperty('--btn-hover-shadow', `0 20px 40px ${rgbaShadow.replace('0.2', '0.5')}, 0 0 0 2px ${color}`);
+            document.documentElement.style.setProperty('--text', textColor);
         };
 
         const hexToRgb = (hex) => {
@@ -451,27 +470,85 @@
             return "#"+RR+GG+BB;
         };
 
-        // === ПАЛИТРА ===
-        const palette = document.getElementById('colorPalette');
-        const toggleBtn = document.getElementById('themeToggle');
+        // RGB → HSL
+        const rgbToHsl = (r, g, b) => {
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return [h * 360, s * 100, l * 100];
+        };
 
-        toggleBtn.addEventListener('click', () => {
-            palette.classList.toggle('show');
+        // === ПАЛИТРА + МГНОВЕННОЕ ПРИМЕНЕНИЕ + РАЗМЫТИЕ ===
+        const palette = document.getElementById('colorPalette');
+        const dot = document.getElementById('colorDot');
+        const toggleBtn = document.getElementById('themeToggle');
+        const body = document.body;
+
+        let isDragging = false;
+
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = palette.classList.toggle('show');
+            body.classList.toggle('blur', isOpen);
+            body.classList.toggle('show-blur', isOpen);
+            if (!isOpen) isDragging = false;
         });
 
-        // Получаем цвет из палитры
-        palette.addEventListener('click', (e) => {
+        const updatePicker = (e) => {
             const rect = palette.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
             const x = e.clientX - centerX;
             const y = e.clientY - centerY;
-            const angle = Math.atan2(y, x) * 180 / Math.PI + 180;
-            const saturation = Math.min(Math.sqrt(x*x + y*y) / (rect.width / 2), 1);
-            const hue = angle;
-            const color = hslToHex(hue, saturation * 100, 50);
-            updateCSSVariables(color);
+            const distance = Math.sqrt(x*x + y*y);
+            const maxRadius = rect.width / 2 - 16;
+
+            if (distance <= maxRadius || isDragging) {
+                const clampedX = Math.max(-maxRadius, Math.min(maxRadius, x));
+                const clampedY = Math.max(-maxRadius, Math.min(maxRadius, y));
+
+                dot.style.left = `${clampedX + rect.width / 2}px`;
+                dot.style.top = `${clampedY + rect.height / 2}px`;
+
+                const angle = Math.atan2(clampedY, clampedX) * 180 / Math.PI + 180;
+                const saturation = Math.min(distance / maxRadius, 1) * 100;
+                const hue = angle;
+                const color = hslToHex(hue, saturation, 50);
+
+                updateCSSVariables(color);
+            }
+        };
+
+        palette.addEventListener('mousedown', (e) => {
+            if (e.target === palette || e.target === dot) {
+                isDragging = true;
+                updatePicker(e);
+            }
         });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                updatePicker(e);
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        palette.addEventListener('click', updatePicker);
 
         const hslToHex = (h, s, l) => {
             l /= 100;
@@ -546,7 +623,6 @@
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
 
-        // Поддержка курсора над палитрой
         palette.addEventListener('mouseenter', () => cursor.classList.add('hover'));
         palette.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     </script>
