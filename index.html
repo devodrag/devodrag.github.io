@@ -223,15 +223,6 @@
             box-shadow: 0 20px 40px rgba(255, 0, 136, 0.5);
         }
 
-        .btn.heroku {
-            background: linear-gradient(135deg, #6a5acd, #836fff);
-            box-shadow: 0 6px 16px rgba(106, 90, 205, 0.3);
-        }
-
-        .btn.heroku:hover {
-            box-shadow: 0 20px 40px rgba(106, 90, 205, 0.5);
-        }
-
         .theme-toggle {
             position: absolute;
             top: 20px;
@@ -287,9 +278,9 @@
             width: 90%;
             max-width: 320px;
             box-shadow: var(--glow);
-            transform: translateY(-50px) scale(0.8);
+            transform: translateY(-100px) scale(0.3);
             opacity: 0;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease, background 0.5s ease, border 0.5s ease;
+            transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.45s ease, background 0.5s ease, border 0.5s ease;
         }
 
         .modal.show .modal-content {
@@ -403,17 +394,27 @@
         }
 
         function openDonate() { 
-            document.getElementById('donateModal').classList.add('show'); 
+            const modal = document.getElementById('donateModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
         }
         function closeDonate() { 
-            document.getElementById('donateModal').classList.remove('show'); 
+            const modal = document.getElementById('donateModal');
+            modal.classList.remove('show');
+            setTimeout(() => modal.style.display = 'none', 450);
         }
         function openXRocket() { 
             closeDonate(); 
-            setTimeout(() => document.getElementById('xrocketModal').classList.add('show'), 150); 
+            setTimeout(() => {
+                const modal = document.getElementById('xrocketModal');
+                modal.style.display = 'flex';
+                setTimeout(() => modal.classList.add('show'), 10);
+            }, 200);
         }
         function closeXRocket() { 
-            document.getElementById('xrocketModal').classList.remove('show'); 
+            const modal = document.getElementById('xrocketModal');
+            modal.classList.remove('show');
+            setTimeout(() => modal.style.display = 'none', 450);
         }
 
         window.addEventListener('click', e => { 
