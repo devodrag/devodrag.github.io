@@ -69,10 +69,42 @@
             background: var(--card);
             border-radius: 20px;
             border: 1px solid rgba(0, 212, 255, 0.3);
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+            box-shadow: 
+                0 0 30px rgba(0, 212, 255, 0.2),
+                0 0 0 1px rgba(0, 212, 255, 0.1);
             max-width: 380px;
             position: relative;
             z-index: 1;
+            animation: pulseGlow 3s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 
+                    0 0 30px rgba(0, 212, 255, 0.2),
+                    0 0 0 1px rgba(0, 212, 255, 0.1);
+            }
+            100% {
+                box-shadow: 
+                    0 0 35px rgba(0, 212, 255, 0.25),
+                    0 0 0 1px rgba(0, 212, 255, 0.15);
+            }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border-radius: 22px;
+            background: linear-gradient(45deg, transparent, var(--neon), transparent);
+            opacity: 0.15;
+            z-index: -1;
+            animation: borderPulse 4s infinite ease-in-out;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { opacity: 0.15; transform: scale(1); }
+            50% { opacity: 0.25; transform: scale(1.02); }
         }
 
         .avatar {
