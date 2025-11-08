@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>devodrag | bio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <img src="avatar.jpg" alt="Avatar" class="avatar">
+        <div class="nickname">@devodrag</div>
+        <div class="loading">Loading . . .</div>
+        <h1>devodrag</h1>
+        
+        <div class="bio">
+            <span class="bio-item">From: Russia</span>
+            <span class="bio-item">Python Developer</span>
+        </div>
+
+        <ul>
+            <li><strong>Никнеймы:</strong> devodrag</li>
+            <li><strong>Языки:</strong> Python, JavaScript, TypeScript, HTML, CSS</li>
+            <li><strong>Особенность:</strong> i use heroku userbot</li>
+        </ul>
+
+        <!-- Карточки ботов -->
+        <div class="bot-card">
+            <div class="bot-title">Crypto Bot</div>
+            <div class="bot-stats">2 181 008 monthly users</div>
+            <div>Use @CryptoBot to buy, sell, store, @send and pay with cryptocurrency right in Telegram.</div>
+        </div>
+
+        <div class="bot-card">
+            <div class="bot-title">xRocket</div>
+            <div class="bot-stats">1 240 942 monthly users</div>
+            <div>#1 CEX & SocialFi platform on Telegram.</div>
+            <div>@xrocketnews — news channel</div>
+        </div>
+
+        <div class="links">
+            <a href="https://t.me/devodrag" class="btn" target="_blank">
+                Telegram
+            </a>
+            <button class="btn donate" onclick="openDonate()">
+                Donate
+            </button>
+        </div>
+
+        <hr>
+    </div>
+
+    <!-- Donate Overlay -->
+    <div id="donateOverlay" class="overlay">
+        <div class="modal">
+            <span class="close" onclick="closeDonate()">×</span>
+            <h2>Выбери способ доната</h2>
+            <div class="links">
+                <a href="https://t.me/send?start=IVZIFRT5CKMx" class="btn" target="_blank">
+                    CryptoBot
+                </a>
+                <button class="btn" onclick="openXRocket()">
+                    xRocket
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- xRocket Submenu -->
+    <div id="xrocketOverlay" class="overlay">
+        <div class="modal">
+            <span class="close" onclick="closeXRocket()">×</span>
+            <h2>xRocket</h2>
+            <div class="links">
+                <a href="https://t.me/xrocket?start=inv_Rnhh88Q1gY7AxsR" class="btn" target="_blank">
+                    xRocket USDT
+                </a>
+                <a href="https://t.me/xrocket?start=inv_ip2bPuPJK0MNYFU" class="btn" target="_blank">
+                    xRocket TON
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openDonate() {
+            document.getElementById('donateOverlay').style.display = 'flex';
+        }
+
+        function closeDonate() {
+            document.getElementById('donateOverlay').style.display = 'none';
+        }
+
+        function openXRocket() {
+            closeDonate();
+            setTimeout(() => {
+                document.getElementById('xrocketOverlay').style.display = 'flex';
+            }, 300);
+        }
+
+        function closeXRocket() {
+            document.getElementById('xrocketOverlay').style.display = 'none';
+        }
+
+        window.addEventListener('click', (e) => {
+            const donate = document.getElementById('donateOverlay');
+            const xrocket = document.getElementById('xrocketOverlay');
+            if (e.target === donate) closeDonate();
+            if (e.target === xrocket) closeXRocket();
+        });
+    </script>
+</body>
+</html>
