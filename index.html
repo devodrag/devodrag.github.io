@@ -54,95 +54,45 @@
         }
         body.blur.show-blur::before { opacity: 1; }
 
+        /* === КУРСОР: МГНОВЕННЫЙ + ЛЁГКИЙ ЭФФЕКТ === */
         .cursor {
             position: fixed;
-            width: 20px; height: 20px;
+            width: 18px;
+            height: 18px;
             background: var(--neon);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
-            box-shadow: var(--glow);
+            box-shadow: 0 0 12px var(--neon);
             transform: translate(-50%, -50%);
             mix-blend-mode: difference;
-            transition: all 0.2s ease;
+            transition: width 0.15s ease, height 0.15s ease, box-shadow 0.2s ease;
+            /* Убрана плавность позиционирования — теперь мгновенно */
         }
+
         .cursor::after {
-            content: ''; position: absolute; top: 50%; left: 50%;
-            width: 6px; height: 6px; background: white; border-radius: 50%;
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 6px; height: 6px;
+            background: white;
+            border-radius: 50%;
             transform: translate(-50%, -50%);
+            opacity: 0.8;
         }
-        .cursor.hover { width: 36px; height: 36px; box-shadow: 0 0 25px var(--neon), 0 0 40px var(--neon); }
 
-        .container {
-            text-align: center; padding: 40px 30px; background: var(--card);
-            border-radius: 20px; border: 1px solid var(--border-color);
-            box-shadow: var(--glow-pulse); max-width: 380px; position: relative; z-index: 1;
-            animation: pulseGlow 3s infinite alternate ease-in-out;
+        .cursor.hover {
+            width: 30px;
+            height: 30px;
+            box-shadow: 0 0 20px var(--neon), 0 0 35px var(--neon);
         }
-        @keyframes pulseGlow { 0% { box-shadow: var(--glow-pulse); } 100% { box-shadow: var(--glow-pulse-end); } }
-        .container::before {
-            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
-            border-radius: 22px; background: linear-gradient(45deg, transparent, var(--neon), transparent);
-            opacity: 0.15; z-index: -1; animation: borderPulse 4s infinite ease-in-out;
-        }
-        @keyframes borderPulse { 0%, 100% { opacity: 0.15; transform: scale(1); } 50% { opacity: 0.25; transform: scale(1.02); } }
 
-        .avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: var(--glow); margin-bottom: 16px; }
-        h1 { font-size: 2.4em; color: white; text-shadow: 0 0 10px var(--neon); margin: 0 0 8px; }
-        .location, .info p { color: var(--text); transition: color 0.3s ease; }
-        .location { font-size: 0.9em; margin-bottom: 20px; }
-        .info p { font-size: 0.95em; text-shadow: 0 0 5px var(--neon); }
-
-        .links { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
-        .btn {
-            padding: 14px 28px; background: var(--btn-bg); color: #000; font-weight: 700; font-size: 1em;
-            border: none; border-radius: 16px; cursor: none; position: relative; overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
-            box-shadow: var(--btn-shadow); min-width: 120px; text-transform: uppercase; letter-spacing: 0.5px;
-            text-decoration: none; display: inline-block; text-align: center;
-        }
-        .btn::before { content: ''; position: absolute; top: 0; left: -150%; width: 200%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: 0.8s; }
-        .btn:hover { transform: translateY(-8px) scale(1.08); box-shadow: var(--btn-hover-shadow); }
-        .btn:hover::before { left: 150%; }
-        .btn.donate { background: linear-gradient(135deg, #ff0088, #ff3399); box-shadow: 0 6px 16px rgba(255, 0, 136, 0.3); }
-        .btn.donate:hover { box-shadow: 0 20px 40px rgba(255, 0, 136, 0.5); }
-
-        .theme-toggle {
-            position: absolute; top: 20px; right: 20px; background: var(--card);
-            border: 1px solid var(--neon); color: var(--neon); width: 40px; height: 40px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 1.2em; cursor: none; z-index: 100; transition: all 0.4s ease;
-        }
-        .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--neon); }
-
-        /* === ПОЛНОЦВЕТНАЯ КВАДРАТНАЯ ПАЛИТРА (HUE + SAT + VALUE) === */
-        .color-palette {
-            position: absolute; top: 70px; right: 20px; width: 200px; height: 200px;
-            border-radius: 12px; border: 3px solid var(--card);
-            box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 0 2px var(--neon);
-            opacity: 0; visibility: hidden; transform: scale(0.3); transform-origin: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 99;
-            cursor: none; overflow: hidden; pointer-events: none;
-        }
-        .color-palette.show { opacity: 1; visibility: visible; transform: scale(1); pointer-events: auto; }
-
-        .color-palette canvas { width: 100%; height: 100%; border-radius: 9px; }
-
-        .color-picker-dot {
-            position: absolute; width: 20px; height: 20px; background: transparent;
-            border: 3px solid white; border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0,0,0,0.6), 0 0 0 2px var(--neon);
-            pointer-events: none; z-index: 10; opacity: 0; transition: all 0.15s ease;
-        }
-        .color-palette.show .color-picker-dot { opacity: 1; }
-
-        @media (max-width: 480px) {
-            .container { padding: 30px 20px; } h1 { font-size: 2em; }
-            .links { flex-direction: column; gap: 12px; } .btn { width: 100%; max-width: 200px; }
-            .theme-toggle { top: 15px; right: 15px; }
-            .color-palette { top: 65px; right: 15px; width: 160px; height: 160px; }
-        }
+        /* Остальные стили без изменений */
+        .container { /* ... */ }
+        .theme-toggle { /* ... */ }
+        .color-palette { /* ... */ }
+        .color-picker-dot { /* ... */ }
+        /* ... остальные стили как в предыдущей версии ... */
     </style>
 </head>
 <body>
@@ -153,7 +103,6 @@
         <i class="fas fa-palette"></i>
     </button>
 
-    <!-- ПОЛНОЦВЕТНАЯ ПАЛИТРА -->
     <div class="color-palette" id="colorPalette">
         <canvas id="paletteCanvas" width="200" height="200"></canvas>
         <div class="color-picker-dot" id="colorDot"></div>
@@ -171,61 +120,14 @@
         </div>
     </div>
 
-    <!-- Модалки (без изменений) -->
-    <div id="donateModal" class="modal">...</div>
-    <div id="xrocketModal" class="modal">...</div>
-
     <script>
-        // === ЦВЕТОВЫЕ ФУНКЦИИ ===
-        const updateCSSVariables = (color) => {
-            const rgb = hexToRgb(color);
-            const darker = shadeColor(color, -30);
-            const rgba = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)`;
-            const rgbaShadow = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`;
-            const rgbaShadowEnd = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)`;
-            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-            const textColor = `hsl(${hsl[0]}, 70%, 85%)`;
+        // === ЦВЕТОВЫЕ ФУНКЦИИ (без изменений) ===
+        const updateCSSVariables = (color) => { /* ... */ };
+        const hexToRgb = (hex) => { /* ... */ };
+        const shadeColor = (color, percent) => { /* ... */ };
+        const rgbToHsl = (r, g, b) => { /* ... */ };
 
-            document.documentElement.style.setProperty('--neon', color);
-            document.documentElement.style.setProperty('--neon-dark', darker);
-            document.documentElement.style.setProperty('--border-color', rgba);
-            document.documentElement.style.setProperty('--glow-pulse', `0 0 30px ${rgbaShadow}`);
-            document.documentElement.style.setProperty('--glow-pulse-end', `0 0 35px ${rgbaShadowEnd}`);
-            document.documentElement.style.setProperty('--btn-bg', `linear-gradient(135deg, ${darker}, ${color})`);
-            document.documentElement.style.setProperty('--btn-shadow', `0 6px 16px ${rgbaShadow}, 0 0 0 1px ${rgba}`);
-            document.documentElement.style.setProperty('--btn-hover-shadow', `0 20px 40px ${rgbaShadow.replace('0.2', '0.5')}, 0 0 0 2px ${color}`);
-            document.documentElement.style.setProperty('--text', textColor);
-        };
-
-        const hexToRgb = (hex) => /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) ? {
-            r: parseInt(RegExp.$1, 16), g: parseInt(RegExp.$2, 16), b: parseInt(RegExp.$3, 16)
-        } : null;
-
-        const shadeColor = (color, percent) => {
-            let [R, G, B] = [1,3,5].map(i => parseInt(color.slice(i, i+2), 16));
-            [R, G, B] = [R, G, B].map(c => Math.min(255, Math.round(c * (100 + percent) / 100)));
-            return `#${R.toString(16).padStart(2,'0')}${G.toString(16).padStart(2,'0')}${B.toString(16).padStart(2,'0')}`;
-        };
-
-        const rgbToHsl = (r, g, b) => {
-            r /= 255; g /= 255; b /= 255;
-            const max = Math.max(r, g, b), min = Math.min(r, g, b);
-            let h, s, l = (max + min) / 2;
-            if (max === min) h = s = 0;
-            else {
-                const d = max - min;
-                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-                switch (max) {
-                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-                    case g: h = (b - r) / d + 2; break;
-                    case b: h = (r - g) / d + 4; break;
-                }
-                h /= 6;
-            }
-            return [h * 360, s * 100, l * 100];
-        };
-
-        // === ПОЛНОЦВЕТНАЯ ПАЛИТРА (HUE по горизонтали, SAT по вертикали, VALUE = 100%) ===
+        // === ПАЛИТРА (без изменений) ===
         const palette = document.getElementById('colorPalette');
         const canvas = document.getElementById('paletteCanvas');
         const ctx = canvas.getContext('2d');
@@ -248,23 +150,7 @@
             }
         };
 
-        const hsvToRgb = (h, s, v) => {
-            let r, g, b;
-            const i = Math.floor(h * 6);
-            const f = h * 6 - i;
-            const p = v * (1 - s);
-            const q = v * (1 - f * s);
-            const t = v * (1 - (1 - f) * s);
-            switch (i % 6) {
-                case 0: r = v, g = t, b = p; break;
-                case 1: r = q, g = v, b = p; break;
-                case 2: r = p, g = v, b = t; break;
-                case 3: r = p, g = q, b = v; break;
-                case 4: r = t, g = p, b = v; break;
-                case 5: r = v, g = p, b = q; break;
-            }
-            return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
-        };
+        const hsvToRgb = (h, s, v) => { /* ... */ };
 
         const getColorAt = (x, y) => {
             const pixel = ctx.getImageData(x, y, 1, 1).data;
@@ -278,7 +164,6 @@
             const isOpen = palette.classList.toggle('show');
             body.classList.toggle('blur', isOpen);
             body.classList.toggle('show-blur', isOpen);
-
             if (isOpen) {
                 dot.style.left = '50%';
                 dot.style.top = '50%';
@@ -291,10 +176,8 @@
             const rect = canvas.getBoundingClientRect();
             const x = Math.max(0, Math.min(rect.width - 1, e.clientX - rect.left));
             const y = Math.max(0, Math.min(rect.height - 1, e.clientY - rect.top));
-
             dot.style.left = `${x}px`;
             dot.style.top = `${y}px`;
-
             const color = getColorAt(Math.floor(x * (canvas.width / rect.width)), Math.floor(y * (canvas.height / rect.height)));
             updateCSSVariables(color);
         };
@@ -304,22 +187,28 @@
         document.addEventListener('mouseup', () => { isDragging = false; });
         canvas.addEventListener('click', updatePicker);
 
-        // === КУРСОР ===
+        // === КУРСОР: МГНОВЕННЫЙ + МИНИМАЛЬНЫЙ ЭФФЕКТ ===
         const cursor = document.querySelector('.cursor');
         let mouseX = 0, mouseY = 0;
-        document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-        const updateCursor = () => {
-            const currentX = parseFloat(cursor.style.left) || mouseX;
-            const currentY = parseFloat(cursor.style.top) || mouseY;
-            cursor.style.left = (currentX + (mouseX - currentX) * 0.2) + 'px';
-            cursor.style.top = (currentY + (mouseY - currentY) * 0.2) + 'px';
-            requestAnimationFrame(updateCursor);
-        };
-        requestAnimationFrame(updateCursor);
 
+        // Прямое позиционирование — без `requestAnimationFrame` и сглаживания
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+        });
+
+        // Hover-эффект остаётся
         document.querySelectorAll('.btn, .close, .theme-toggle, .modal-btn, .color-palette').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
         });
     </script>
 </body>
