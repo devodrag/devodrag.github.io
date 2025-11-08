@@ -16,6 +16,9 @@
             --glow-pulse: 0 0 30px rgba(0, 212, 255, 0.2);
             --glow-pulse-end: 0 0 35px rgba(0, 212, 255, 0.25);
             --border-color: rgba(0, 212, 255, 0.3);
+            --btn-bg: linear-gradient(135deg, #00b8e6, #00d4ff);
+            --btn-shadow: 0 6px 16px rgba(0, 212, 255, 0.3), 0 0 0 1px rgba(0, 212, 255, 0.2);
+            --btn-hover-shadow: 0 20px 40px rgba(0, 212, 255, 0.5), 0 0 0 2px var(--neon);
         }
 
         [data-theme="orange"] {
@@ -28,6 +31,9 @@
             --glow-pulse: 0 0 30px rgba(255, 107, 0, 0.2);
             --glow-pulse-end: 0 0 35px rgba(255, 107, 0, 0.25);
             --border-color: rgba(255, 107, 0, 0.3);
+            --btn-bg: linear-gradient(135deg, #cc5500, #ff6b00);
+            --btn-shadow: 0 6px 16px rgba(255, 107, 0, 0.3), 0 0 0 1px rgba(255, 107, 0, 0.2);
+            --btn-hover-shadow: 0 20px 40px rgba(255, 107, 0, 0.5), 0 0 0 2px var(--neon);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -166,7 +172,7 @@
 
         .btn {
             padding: 14px 28px;
-            background: linear-gradient(135deg, #00b8e6, #00d4ff);
+            background: var(--btn-bg);
             color: #000;
             font-weight: 700;
             font-size: 1em;
@@ -176,18 +182,13 @@
             position: relative;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
-            box-shadow: 0 6px 16px rgba(0, 212, 255, 0.3), 0 0 0 1px rgba(0, 212, 255, 0.2);
+            box-shadow: var(--btn-shadow);
             min-width: 120px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             text-decoration: none;
             display: inline-block;
             text-align: center;
-        }
-
-        [data-theme="orange"] .btn {
-            background: linear-gradient(135deg, #cc5500, #ff6b00);
-            box-shadow: 0 6px 16px rgba(255, 107, 0, 0.3), 0 0 0 1px rgba(255, 107, 0, 0.2);
         }
 
         .btn:active {
@@ -206,11 +207,7 @@
 
         .btn:hover {
             transform: translateY(-8px) scale(1.08);
-            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.5), 0 0 0 2px var(--neon);
-        }
-
-        [data-theme="orange"] .btn:hover {
-            box-shadow: 0 20px 40px rgba(255, 107, 0, 0.5), 0 0 0 2px var(--neon);
+            box-shadow: var(--btn-hover-shadow);
         }
 
         .btn:hover::before {
@@ -344,7 +341,7 @@
 
         <div class="links">
             <a href="https://t.me/devodrag" class="btn" target="_blank">Telegram</a>
-            <a href="https://t.me/heroku_ub" class="btn heroku" target="_blank">Heroku</a>
+            <a href="https://t.me/heroku_ub" class="btn" target="_blank">Heroku</a>
             <button class="btn donate" onclick="openDonate()">Donate</button>
         </div>
     </div>
