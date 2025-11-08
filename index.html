@@ -240,16 +240,13 @@
             box-shadow: 0 0 20px var(--neon);
         }
 
-        /* === ПАЛИТРА ЦВЕТОВ === */
+        /* === ПАЛИТРА ЦВЕТОВ — КРУГОВАЯ + ТОЧНАЯ === */
         .color-palette {
             position: absolute;
             top: 70px;
             right: 20px;
             width: 200px;
             height: 200px;
-            background: 
-                radial-gradient(circle at center, white 10%, transparent 11%),
-                conic-gradient(from 0deg, red, yellow, lime, cyan, blue, magenta, red);
             border-radius: 50%;
             border: 3px solid var(--card);
             box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 0 2px var(--neon);
@@ -390,9 +387,9 @@
         <i class="fas fa-palette"></i>
     </button>
 
-    <div class="color-palette" id="colorPalette">
-        <div class="color-picker-dot" id="colorDot"></div>
-    </div>
+    <!-- Canvas для круговой палитры -->
+    <canvas id="colorPaletteCanvas" width="200" height="200" class="color-palette"></canvas>
+    <div class="color-picker-dot" id="colorDot"></div>
 
     <div class="container">
         <img src="avatar.jpg" alt="devodrag" class="avatar">
@@ -495,23 +492,21 @@
             return [h * 360, s * 100, l * 100];
         };
 
-        // === ПАЛИТРА: ТОЧНОЕ СЧИТЫВАНИЕ ЦВЕТА ПО КООРДИНАТАМ ===
-        const palette = document.getElementById('colorPalette');
+        // === КРУГОВАЯ ПАЛИТРА НА CANVAS ===
+        const canvas = document.getElementById('colorPaletteCanvas');
+        const ctx = canvas.getContext('2d');
         const dot = document.getElementById('colorDot');
         const toggleBtn = document.getElementById('themeToggle');
         const body = document.body;
 
         let isDragging = false;
-        let canvas, ctx;
 
-        // Создаём canvas для точного чтения цвета
-        const initCanvas = () => {
-            canvas = document.createElement('canvas');
-            canvas.width = 200;
-            canvas.height = 200;
-            ctx = canvas.getContext('2d');
-            // Рисуем палитру на canvas
-            const grad = ctx.createConicGradient(0, 100, 100);
+        // Рисуем круговую палитру
+        const drawPalette = () => {
+            const centerX = 100, centerY = 100, radius = 80;
+
+            // Цветовой круг
+            const grad = ctx.createConicGradient(0, centerX, centerY);
             grad.addColorStop(0, 'red');
             grad.addColorStop(1/6, 'yellow');
             grad.addColorStop(2/6, 'lime');
@@ -519,37 +514,42 @@
             grad.addColorStop(4/6, 'blue');
             grad.addColorStop(5/6, 'magenta');
             grad.addColorStop(1, 'red');
+
             ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, 200, 200);
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.fill();
 
             // Белый центр
-            const radGrad = ctx.createRadialGradient(100, 100, 0, 100, 100, 80);
+            const radGrad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
             radGrad.addColorStop(0, 'white');
             radGrad.addColorStop(1, 'transparent');
             ctx.globalCompositeOperation = 'destination-out';
             ctx.fillStyle = radGrad;
             ctx.beginPath();
-            ctx.arc(100, 100, 80, 0, Math.PI * 2);
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
             ctx.fill();
             ctx.globalCompositeOperation = 'source-over';
         };
 
+        drawPalette();
+
         const getColorAtPoint = (x, y) => {
             const pixel = ctx.getImageData(x, y, 1, 1).data;
+            if (pixel[3] === 0) return null; // Прозрачно — вне круга
             return `#${((1 << 24) + (pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).slice(1)}`;
         };
 
         toggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            const isOpen = palette.classList.toggle('show');
+            const isOpen = canvas.classList.toggle('show');
             body.classList.toggle('blur', isOpen);
             body.classList.toggle('show-blur', isOpen);
-            if (isOpen && !canvas) initCanvas();
             if (!isOpen) isDragging = false;
         });
 
         const updatePicker = (e) => {
-            const rect = palette.getBoundingClientRect();
+            const rect = canvas.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
             const x = e.clientX - centerX;
@@ -564,33 +564,28 @@
                 dot.style.left = `${clampedX + rect.width / 2}px`;
                 dot.style.top = `${clampedY + rect.height / 2}px`;
 
-                // Точное чтение цвета из canvas
-                const canvasX = (clampedX + rect.width / 2) * (200 / rect.width);
-                const canvasY = (clampedY + rect.height / 2) * (200 / rect.height);
+                const canvasX = (clampedX + rect.width / 2);
+                const canvasY = (clampedY + rect.height / 2);
                 const color = getColorAtPoint(canvasX, canvasY);
 
-                updateCSSVariables(color);
+                if (color) updateCSSVariables(color);
             }
         };
 
-        palette.addEventListener('mousedown', (e) => {
-            if (e.target === palette || e.target === dot) {
-                isDragging = true;
-                updatePicker(e);
-            }
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            updatePicker(e);
         });
 
         document.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                updatePicker(e);
-            }
+            if (isDragging) updatePicker(e);
         });
 
         document.addEventListener('mouseup', () => {
             isDragging = false;
         });
 
-        palette.addEventListener('click', updatePicker);
+        canvas.addEventListener('click', updatePicker);
 
         // === МОДАЛЬНЫЕ ОКНА ===
         function openDonate() { 
@@ -654,8 +649,8 @@
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
 
-        palette.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-        palette.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        canvas.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+        canvas.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     </script>
 </body>
 </html>
