@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>devodrag bio</title>
+    <title>devodrag</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
@@ -13,6 +13,9 @@
             --card: #111;
             --text: #e0f7ff;
             --glow: 0 0 15px var(--neon), 0 0 30px var(--neon);
+            --glow-pulse: 0 0 30px rgba(0, 212, 255, 0.2);
+            --glow-pulse-end: 0 0 35px rgba(0, 212, 255, 0.25);
+            --border-color: rgba(0, 212, 255, 0.3);
         }
 
         [data-theme="orange"] {
@@ -22,6 +25,9 @@
             --card: #110800;
             --text: #ffe0cc;
             --glow: 0 0 15px var(--neon), 0 0 30px var(--neon);
+            --glow-pulse: 0 0 30px rgba(255, 107, 0, 0.2);
+            --glow-pulse-end: 0 0 35px rgba(255, 107, 0, 0.25);
+            --border-color: rgba(255, 107, 0, 0.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -78,10 +84,8 @@
             padding: 40px 30px;
             background: var(--card);
             border-radius: 20px;
-            border: 1px solid rgba(255, 107, 0, 0.3);
-            box-shadow: 
-                0 0 30px rgba(255, 107, 0, 0.2),
-                0 0 0 1px rgba(255, 107, 0, 0.1);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--glow-pulse);
             max-width: 380px;
             position: relative;
             z-index: 1;
@@ -89,37 +93,9 @@
             transition: background 0.5s ease, border 0.5s ease, box-shadow 0.5s ease;
         }
 
-        [data-theme="orange"] .container {
-            border: 1px solid rgba(255, 107, 0, 0.3);
-            box-shadow: 
-                0 0 30px rgba(255, 107, 0, 0.2),
-                0 0 0 1px rgba(255, 107, 0, 0.1);
-        }
-
         @keyframes pulseGlow {
-            0% {
-                box-shadow: 
-                    0 0 30px rgba(0, 212, 255, 0.2),
-                    0 0 0 1px rgba(0, 212, 255, 0.1);
-            }
-            100% {
-                box-shadow: 
-                    0 0 35px rgba(0, 212, 255, 0.25),
-                    0 0 0 1px rgba(0, 212, 255, 0.15);
-            }
-        }
-
-        [data-theme="orange"] @keyframes pulseGlow {
-            0% {
-                box-shadow: 
-                    0 0 30px rgba(255, 107, 0, 0.2),
-                    0 0 0 1px rgba(255, 107, 0, 0.1);
-            }
-            100% {
-                box-shadow: 
-                    0 0 35px rgba(255, 107, 0, 0.25),
-                    0 0 0 1px rgba(255, 107, 0, 0.15);
-            }
+            0% { box-shadow: var(--glow-pulse); }
+            100% { box-shadow: var(--glow-pulse-end); }
         }
 
         .container::before {
@@ -197,7 +173,7 @@
             border: none;
             border-radius: 16px;
             cursor: none;
-            position: relative üle;
+            position: relative;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
             box-shadow: 0 6px 16px rgba(0, 212, 255, 0.3), 0 0 0 1px rgba(0, 212, 255, 0.2);
@@ -275,7 +251,7 @@
             font-size: 1.2em;
             cursor: none;
             z-index: 100;
-            transition: all 0.4s ease;
+            transition: all 0.4s ease, background 0.5s ease, border 0.5s ease, color 0.5s ease;
         }
 
         .theme-toggle:hover {
@@ -368,7 +344,7 @@
 
         <div class="links">
             <a href="https://t.me/devodrag" class="btn" target="_blank">Telegram</a>
-            <a href="https://t.me/heroku_ub" class="btn hereksi" target="_blank">Heroku</a>
+            <a href="https://t.me/heroku_ub" class="btn heroku" target="_blank">Heroku</a>
             <button class="btn donate" onclick="openDonate()">Donate</button>
         </div>
     </div>
