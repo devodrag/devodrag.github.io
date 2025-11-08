@@ -54,11 +54,10 @@
         }
         body.blur.show-blur::before { opacity: 1; }
 
-        /* КУРСОР — МГНОВЕННЫЙ */
+        /* КУРСОР */
         .cursor {
             position: fixed;
-            width: 18px;
-            height: 18px;
+            width: 18px; height: 18px;
             background: var(--neon);
             border-radius: 50%;
             pointer-events: none;
@@ -69,198 +68,115 @@
             transition: width 0.15s ease, height 0.15s ease, box-shadow 0.2s ease;
         }
         .cursor::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 6px; height: 6px;
-            background: white;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0.8;
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 6px; height: 6px; background: white; border-radius: 50%;
+            transform: translate(-50%, -50%); opacity: 0.8;
         }
-        .cursor.hover {
-            width: 30px;
-            height: 30px;
-            box-shadow: 0 0 20px var(--neon), 0 0 35px var(--neon);
-        }
+        .cursor.hover { width: 30px; height: 30px; box-shadow: 0 0 20px var(--neon), 0 0 35px var(--neon); }
 
         /* КОНТЕЙНЕР */
         .container {
-            text-align: center;
-            padding: 40px 30px;
-            background: var(--card);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--glow-pulse);
-            max-width: 380px;
-            position: relative;
-            z-index: 1;
+            text-align: center; padding: 40px 30px; background: var(--card);
+            border-radius: 20px; border: 1px solid var(--border-color);
+            box-shadow: var(--glow-pulse); max-width: 380px; position: relative; z-index: 1;
             animation: pulseGlow 3s infinite alternate ease-in-out;
         }
-        @keyframes pulseGlow {
-            0% { box-shadow: var(--glow-pulse); }
-            100% { box-shadow: var(--glow-pulse-end); }
-        }
+        @keyframes pulseGlow { 0% { box-shadow: var(--glow-pulse); } 100% { box-shadow: var(--glow-pulse-end); } }
         .container::before {
-            content: '';
-            position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
-            border-radius: 22px;
-            background: linear-gradient(45deg, transparent, var(--neon), transparent);
-            opacity: 0.15;
-            z-index: -1;
-            animation: borderPulse 4s infinite ease-in-out;
+            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border-radius: 22px; background: linear-gradient(45deg, transparent, var(--neon), transparent);
+            opacity: 0.15; z-index: -1; animation: borderPulse 4s infinite ease-in-out;
         }
-        @keyframes borderPulse {
-            0%, 100% { opacity: 0.15; transform: scale(1); }
-            50% { opacity: 0.25; transform: scale(1.02); }
-        }
+        @keyframes borderPulse { 0%, 100% { opacity: 0.15; transform: scale(1); } 50% { opacity: 0.25; transform: scale(1.02); } }
 
         .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 3px solid var(--neon);
-            box-shadow: var(--glow);
-            margin-bottom: 16px;
-            object-fit: cover;
+            width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--neon);
+            box-shadow: var(--glow); margin-bottom: 16px; object-fit: cover;
             transition: border 0.5s ease, box-shadow 0.5s ease;
         }
-        h1 {
-            font-size: 2.4em;
-            color: white;
-            text-shadow: 0 0 10px var(--neon);
-            margin: 0 0 8px;
-        }
-        .location, .info p {
-            color: var(--text);
-            transition: color 0.3s ease;
-        }
+        h1 { font-size: 2.4em; color: white; text-shadow: 0 0 10px var(--neon); margin: 0 0 8px; }
+        .location, .info p { color: var(--text); transition: color 0.3s ease; }
         .location { font-size: 0.9em; margin-bottom: 20px; }
         .info p { font-size: 0.95em; text-shadow: 0 0 5px var(--neon); }
 
-        .links {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 24px;
-            flex-wrap: wrap;
-        }
+        .links { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
         .btn {
-            padding: 14px 28px;
-            background: var(--btn-bg);
-            color: #000;
-            font-weight: 700;
-            font-size: 1em;
-            border: none;
-            border-radius: 16px;
-            cursor: none;
-            position: relative;
-            overflow: hidden;
+            padding: 14px 28px; background: var(--btn-bg); color: #000; font-weight: 700; font-size: 1em;
+            border: none; border-radius: 16px; cursor: none; position: relative; overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
-            box-shadow: var(--btn-shadow);
-            min-width: 120px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
+            box-shadow: var(--btn-shadow); min-width: 120px; text-transform: uppercase; letter-spacing: 0.5px;
+            text-decoration: none; display: inline-block; text-align: center;
         }
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -150%;
-            width: 200%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: 0.8s;
-        }
-        .btn:hover {
-            transform: translateY(-8px) scale(1.08);
-            box-shadow: var(--btn-hover-shadow);
-        }
+        .btn::before { content: ''; position: absolute; top: 0; left: -150%; width: 200%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: 0.8s; }
+        .btn:hover { transform: translateY(-8px) scale(1.08); box-shadow: var(--btn-hover-shadow); }
         .btn:hover::before { left: 150%; }
-        .btn.donate {
-            background: linear-gradient(135deg, #ff0088, #ff3399);
-            box-shadow: 0 6px 16px rgba(255, 0, 136, 0.3);
-        }
+        .btn.donate { background: linear-gradient(135deg, #ff0088, #ff3399); box-shadow: 0 6px 16px rgba(255, 0, 136, 0.3); }
         .btn.donate:hover { box-shadow: 0 20px 40px rgba(255, 0, 136, 0.5); }
 
         .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--card);
-            border: 1px solid var(--neon);
-            color: var(--neon);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2em;
-            cursor: none;
-            z-index: 100;
-            transition: all 0.4s ease;
+            position: absolute; top: 20px; right: 20px; background: var(--card);
+            border: 1px solid var(--neon); color: var(--neon); width: 40px; height: 40px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.2em; cursor: none; z-index: 100; transition: all 0.4s ease;
         }
-        .theme-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px var(--neon);
-        }
+        .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--neon); }
 
         /* ПАЛИТРА */
         .color-palette {
-            position: absolute;
-            top: 70px;
-            right: 20px;
-            width: 200px;
-            height: 200px;
-            border-radius: 12px;
-            border: 3px solid var(--card);
+            position: absolute; top: 70px; right: 20px; width: 200px; height: 200px;
+            border-radius: 12px; border: 3px solid var(--card);
             box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 0 2px var(--neon);
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.3);
-            transform-origin: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 99;
-            cursor: none;
-            overflow: hidden;
-            pointer-events: none;
+            opacity: 0; visibility: hidden; transform: scale(0.3); transform-origin: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 99;
+            cursor: none; overflow: hidden; pointer-events: none;
         }
-        .color-palette.show {
-            opacity: 1;
-            visibility: visible;
-            transform: scale(1);
-            pointer-events: auto;
-        }
-        .color-palette canvas {
-            width: 100%;
-            height: 100%;
-            border-radius: 9px;
-        }
+        .color-palette.show { opacity: 1; visibility: visible; transform: scale(1); pointer-events: auto; }
+        .color-palette canvas { width: 100%; height: 100%; border-radius: 9px; }
         .color-picker-dot {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: transparent;
-            border: 3px solid white;
-            border-radius: 50%;
+            position: absolute; width: 20px; height: 20px; background: transparent;
+            border: 3px solid white; border-radius: 50%;
             box-shadow: 0 0 10px rgba(0,0,0,0.6), 0 0 0 2px var(--neon);
-            pointer-events: none;
-            z-index: 10;
-            opacity: 0;
-            transition: all 0.15s ease;
+            pointer-events: none; z-index: 10; opacity: 0; transition: all 0.15s ease;
             transform: translate(-50%, -50%);
         }
         .color-palette.show .color-picker-dot { opacity: 1; }
 
+        /* МОДАЛЬНЫЕ ОКНА */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(12px);
+            justify-content: center; align-items: center; z-index: 1000;
+            opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .modal.show { display: flex; opacity: 1; visibility: visible; }
+        .modal-content {
+            background: var(--card); padding: 28px; border-radius: 16px;
+            border: 1px solid var(--neon); text-align: center; position: relative;
+            width: 90%; max-width: 320px; box-shadow: var(--glow);
+            transform: translateY(-100px) scale(0.3); opacity: 0;
+            transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.45s ease;
+        }
+        .modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; }
+        .close {
+            position: absolute; top: 8px; right: 12px; font-size: 26px;
+            color: var(--neon); cursor: none; transition: color 0.5s ease;
+        }
+        .modal-btn {
+            display: block; width: 100%; margin: 10px 0; padding: 14px 28px;
+            background: var(--btn-bg); color: #000; font-weight: 700; font-size: 1em;
+            border: none; border-radius: 16px; cursor: none; position: relative; overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
+            box-shadow: var(--btn-shadow); text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .modal-btn::before { content: ''; position: absolute; top: 0; left: -150%; width: 200%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: 0.8s; }
+        .modal-btn:hover { transform: translateY(-8px) scale(1.08); box-shadow: var(--btn-hover-shadow); }
+        .modal-btn:hover::before { left: 150%; }
+
         @media (max-width: 480px) {
-            .container { padding: 30px 20px; }
-            h1 { font-size: 2em; }
-            .links { flex-direction: column; gap: 12px; }
-            .btn { width: 100%; max-width: 200px; }
+            .container { padding: 30px 20px; } h1 { font-size: 2em; }
+            .links { flex-direction: column; gap: 12px; } .btn { width: 100%; max-width: 200px; }
             .theme-toggle { top: 15px; right: 15px; }
             .color-palette { top: 65px; right: 15px; width: 160px; height: 160px; }
         }
@@ -283,15 +199,34 @@
 
     <!-- КОНТЕНТ -->
     <div class="container">
-        <!-- АВАТАРКА — РАБОЧАЯ ССЫЛКА -->
-        <img src="https://i.imgur.com/5d2T3kZ.jpeg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/100/00d4ff/000000?text=devodrag'">
+        <!-- АВАТАР ИЗ GITHUB -->
+        <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/100/00d4ff/000000?text=devodrag'">
         <h1>devodrag</h1>
         <p class="location">Russia</p>
         <div class="info"><p>i use heroku userbot</p></div>
         <div class="links">
             <a href="https://t.me/devodrag" class="btn" target="_blank">Telegram</a>
             <a href="https://t.me/heroku_ub" class="btn" target="_blank">Heroku</a>
-            <button class="btn donate" onclick="alert('Donate!')">Donate</button>
+            <button class="btn donate" id="donateBtn">Donate</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛКИ -->
+    <div id="donateModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeDonate">x</span>
+            <h3>Donate via</h3>
+            <a href="https://t.me/send?start=IVZIFRT5CKMx" class="modal-btn" target="_blank">CryptoBot</a>
+            <button class="modal-btn" id="openXRocket">xRocket</button>
+        </div>
+    </div>
+
+    <div id="xrocketModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeXRocket">x</span>
+            <h3>xRocket</h3>
+            <a href="https://t.me/xrocket?start=inv_Rnhh88Q1gY7AxsR" class="modal-btn" target="_blank">USDT</a>
+            <a href="https://t.me/xrocket?start=inv_ip2bPuPJK0MNYFU" class="modal-btn" target="_blank">TON</a>
         </div>
     </div>
 
@@ -419,6 +354,38 @@
         document.addEventListener('mouseup', () => { isDragging = false; });
         canvas.addEventListener('click', updatePicker);
 
+        // === ДОНАТЫ — ПОЛНОСТЬЮ РАБОЧИЕ ===
+        const donateBtn = document.getElementById('donateBtn');
+        const donateModal = document.getElementById('donateModal');
+        const xrocketModal = document.getElementById('xrocketModal');
+        const closeDonate = document.getElementById('closeDonate');
+        const closeXRocket = document.getElementById('closeXRocket');
+        const openXRocket = document.getElementById('openXRocket');
+
+        donateBtn.addEventListener('click', () => {
+            donateModal.classList.add('show');
+        });
+
+        closeDonate.addEventListener('click', () => {
+            donateModal.classList.remove('show');
+        });
+
+        openXRocket.addEventListener('click', () => {
+            donateModal.classList.remove('show');
+            setTimeout(() => xrocketModal.classList.add('show'), 200);
+        });
+
+        closeXRocket.addEventListener('click', () => {
+            xrocketModal.classList.remove('show');
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                donateModal.classList.remove('show');
+                xrocketModal.classList.remove('show');
+            }
+        });
+
         // === КУРСОР — МГНОВЕННЫЙ ===
         const cursor = document.querySelector('.cursor');
         document.addEventListener('mousemove', (e) => {
@@ -426,7 +393,7 @@
             cursor.style.top = e.clientY + 'px';
         });
 
-        document.querySelectorAll('.btn, .theme-toggle, .color-palette').forEach(el => {
+        document.querySelectorAll('.btn, .theme-toggle, .color-palette, .modal-btn').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
