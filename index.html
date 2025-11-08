@@ -287,13 +287,13 @@
             width: 90%;
             max-width: 320px;
             box-shadow: var(--glow);
-            transform: scale(0.7);
+            transform: translateY(-50px) scale(0.8);
             opacity: 0;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease, background 0.5s ease, border 0.5s ease;
         }
 
         .modal.show .modal-content {
-            transform: scale(1);
+            transform: translateY(0) scale(1);
             opacity: 1;
         }
 
@@ -310,7 +310,39 @@
             display: block;
             width: 100%;
             margin: 10px 0;
-            transition: background 0.5s ease;
+            padding: 14px 28px;
+            background: var(--btn-bg);
+            color: #000;
+            font-weight: 700;
+            font-size: 1em;
+            border: none;
+            border-radius: 16px;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
+            box-shadow: var(--btn-shadow);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.8s;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-8px) scale(1.08);
+            box-shadow: var(--btn-hover-shadow);
+        }
+
+        .modal-btn:hover::before {
+            left: 150%;
         }
 
         @media (max-width: 480px) {
@@ -370,14 +402,26 @@
                 document.documentElement.dataset.theme === 'orange' ? '' : 'orange';
         }
 
-        function openDonate() { document.getElementById('donateModal').classList.add('show'); }
-        function closeDonate() { document.getElementById('donateModal').classList.remove('show'); }
+        function openDonate() { 
+            document.getElementById('donateModal').classList.add('show'); 
+        }
+        function closeDonate() { 
+            document.getElementById('donateModal').classList.remove('show'); 
+        }
         function openXRocket() { 
             closeDonate(); 
-            setTimeout(() => document.getElementById('xrocketModal').classList.add('show'), 100); 
+            setTimeout(() => document.getElementById('xrocketModal').classList.add('show'), 150); 
         }
-        function closeXRocket() { document.getElementById('xrocketModal').classList.remove('show'); }
-        window.addEventListener('click', e => { if (e.target.classList.contains('modal')) closeDonate(), closeXRocket(); });
+        function closeXRocket() { 
+            document.getElementById('xrocketModal').classList.remove('show'); 
+        }
+
+        window.addEventListener('click', e => { 
+            if (e.target.classList.contains('modal')) {
+                closeDonate();
+                closeXRocket();
+            }
+        });
 
         const cursor = document.querySelector('.cursor');
         let mouseX = 0, mouseY = 0;
@@ -403,7 +447,7 @@
             requestAnimationFrame(updateCursor);
         });
 
-        document.querySelectorAll('.btn, .close, .theme-toggle').forEach(el => {
+        document.querySelectorAll('.btn, .close, .theme-toggle, .modal-btn').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
