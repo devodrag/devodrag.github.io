@@ -33,11 +33,8 @@
             position: relative;
         }
 
-        /* КАСТОМНЫЙ КУРСОР — ТОЧНО ПО МЫШКЕ */
         .cursor {
             position: fixed;
-            top: 0;
-            left: 0;
             width: 20px;
             height: 20px;
             background: var(--neon);
@@ -45,7 +42,7 @@
             pointer-events: none;
             z-index: 9999;
             box-shadow: var(--glow);
-            transition: transform 0.12s ease, width 0.2s ease, height 0.2s ease;
+            transition: width 0.2s ease, height 0.2s ease;
             transform: translate(-50%, -50%);
             mix-blend-mode: difference;
         }
@@ -73,7 +70,7 @@
             border-radius: 20px;
             border: 1px solid rgba(0, 212, 255, 0.3);
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
-            max-width: 360px;
+            max-width: 380px;
             position: relative;
             z-index: 1;
         }
@@ -165,12 +162,12 @@
         }
 
         .btn.heroku {
-            background: linear-gradient(135deg, #6567fc, #7b68ee);
-            box-shadow: 0 6px 16px rgba(101, 103, 252, 0.3);
+            background: linear-gradient(135deg, #6a5acd, #836fff);
+            box-shadow: 0 6px 16px rgba(106, 90, 205, 0.3);
         }
 
         .btn.heroku:hover {
-            box-shadow: 0 20px 40px rgba(101, 103, 252, 0.5);
+            box-shadow: 0 20px 40px rgba(106, 90, 205, 0.5);
         }
 
         .modal {
@@ -228,7 +225,6 @@
 </head>
 <body>
 
-    <!-- КАСТОМНЫЙ КУРСОР -->
     <div class="cursor"></div>
 
     <div class="container">
@@ -247,7 +243,6 @@
         </div>
     </div>
 
-    <!-- Donate Modal -->
     <div id="donateModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeDonate()">x</span>
@@ -257,7 +252,6 @@
         </div>
     </div>
 
-    <!-- xRocket Modal -->
     <div id="xrocketModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeXRocket()">x</span>
@@ -268,37 +262,36 @@
     </div>
 
     <script>
-        // Модалки
         function openDonate() { document.getElementById('donateModal').classList.add('show'); }
         function closeDonate() { document.getElementById('donateModal').classList.remove('show'); }
         function openXRocket() { closeDonate(); setTimeout(() => document.getElementById('xrocketModal').classList.add('show'), 200); }
         function closeXRocket() { document.getElementById('xrocketModal').classList.remove('show'); }
         window.addEventListener('click', e => { if (e.target.classList.contains('modal')) closeDonate(), closeXRocket(); });
 
-        // КУРСОР — ТОЧНО ПО МЫШКЕ, БЕЗ СМЕЩЕНИЯ
         const cursor = document.querySelector('.cursor');
         let mouseX = 0, mouseY = 0;
 
         document.addEventListener('mousemove', e => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            cursor.style.left = mouseX + 'px';
-            cursor.style.top = mouseY + 'px';
         });
 
-        // Плавное следование
         function updateCursor() {
-            const currentX = parseFloat(cursor.style.left) || 0;
-            const currentY = parseFloat(cursor.style.top) || 0;
+            const currentX = parseFloat(cursor.style.left) || mouseX;
+            const currentY = parseFloat(cursor.style.top) || mouseY;
             const dx = mouseX - currentX;
             const dy = mouseY - currentY;
             cursor.style.left = (currentX + dx * 0.2) + 'px';
             cursor.style.top = (currentY + dy * 0.2) + 'px';
             requestAnimationFrame(updateCursor);
         }
-        requestAnimationFrame(updateCursor);
 
-        // Hover эффект
+        document.addEventListener('DOMContentLoaded', () => {
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+            requestAnimationFrame(updateCursor);
+        });
+
         document.querySelectorAll('.btn, .close').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
