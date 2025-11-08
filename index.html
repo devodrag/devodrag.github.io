@@ -142,32 +142,55 @@
         }
         .color-palette.show .color-picker-dot { opacity: 1; }
 
-        /* МОДАЛЬНЫЕ ОКНА */
+        /* МОДАЛЬНЫЕ ОКНА — С АНИМАЦИЕЙ */
         .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(12px);
-            justify-content: center; align-items: center; z-index: 1000;
-            opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
         }
-        .modal.show { display: flex; opacity: 1; visibility: visible; }
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
         .modal-content {
-            background: var(--card); padding: 28px; border-radius: 16px;
-            border: 1px solid var(--neon); text-align: center; position: relative;
-            width: 90%; max-width: 320px; box-shadow: var(--glow);
-            transform: translateY(-100px) scale(0.3); opacity: 0;
+            background: var(--card);
+            padding: 28px;
+            border-radius: 16px;
+            border: 1px solid var(--neon);
+            text-align: center;
+            position: relative;
+            width: 90%;
+            max-width: 320px;
+            box-shadow: var(--glow);
+            transform: translateY(-60px) scale(0.7);
+            opacity: 0;
             transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.45s ease;
         }
-        .modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; }
+        .modal.show .modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
         .close {
             position: absolute; top: 8px; right: 12px; font-size: 26px;
             color: var(--neon); cursor: none; transition: color 0.5s ease;
         }
+
+        /* КНОПКИ В МОДАЛКЕ — БЕЗ ПОДЧЁРКИВАНИЯ */
         .modal-btn {
             display: block; width: 100%; margin: 10px 0; padding: 14px 28px;
             background: var(--btn-bg); color: #000; font-weight: 700; font-size: 1em;
             border: none; border-radius: 16px; cursor: none; position: relative; overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
             box-shadow: var(--btn-shadow); text-transform: uppercase; letter-spacing: 0.5px;
+            text-decoration: none !important;
         }
         .modal-btn::before { content: ''; position: absolute; top: 0; left: -150%; width: 200%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: 0.8s; }
@@ -199,7 +222,6 @@
 
     <!-- КОНТЕНТ -->
     <div class="container">
-        <!-- АВАТАР ИЗ GITHUB -->
         <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/100/00d4ff/000000?text=devodrag'">
         <h1>devodrag</h1>
         <p class="location">Russia</p>
@@ -354,7 +376,7 @@
         document.addEventListener('mouseup', () => { isDragging = false; });
         canvas.addEventListener('click', updatePicker);
 
-        // === ДОНАТЫ — ПОЛНОСТЬЮ РАБОЧИЕ ===
+        // === ДОНАТЫ — АНИМАЦИЯ ВЕРНУЛАСЬ ===
         const donateBtn = document.getElementById('donateBtn');
         const donateModal = document.getElementById('donateModal');
         const xrocketModal = document.getElementById('xrocketModal');
@@ -372,7 +394,7 @@
 
         openXRocket.addEventListener('click', () => {
             donateModal.classList.remove('show');
-            setTimeout(() => xrocketModal.classList.add('show'), 200);
+            setTimeout(() => xrocketModal.classList.add('show'), 250);
         });
 
         closeXRocket.addEventListener('click', () => {
@@ -386,7 +408,7 @@
             }
         });
 
-        // === КУРСОР — МГНОВЕННЫЙ ===
+        // === КУРСОР ===
         const cursor = document.querySelector('.cursor');
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
