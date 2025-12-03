@@ -26,192 +26,311 @@
             overflow: hidden;
             cursor: none !important;
             font-family: 'Segoe UI', sans-serif;
-        }
-        body {
             background: var(--bg);
             color: var(--text);
+        }
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             position: relative;
-            transition: background 0.5s ease, color 0.3s ease;
         }
 
-        /* СНЕЖИНКИ */
-        #snowflakes { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        /* СНЕЖИНКИ — РАБОТАЮТ */
+        .snow-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
         .snowflake {
             position: absolute;
-            top: -20px;
-            color: #fff;
+            color: #ffffff;
             font-size: 1.4em;
             pointer-events: none;
             user-select: none;
-            animation: fall linear forwards;
+            animation: fall linear infinite;
             opacity: 0.8;
         }
         @keyframes fall {
-            to { transform: translateY(110vh) rotate(720deg); }
+            0% { transform: translateY(-100vh) translateX(0) rotate(0deg); }
+            100% { transform: translateY(110vh) translateX(80px) rotate(720deg); }
         }
 
-        /* ШАПКА САНТЫ */
-        .avatar-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-        .santa-hat {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%) rotate(-10deg);
-            width: 100px;
-            height: 100px;
-            background: url('https://i.ibb.co/5nZ4n5F/santa-hat.png') center/contain no-repeat;
+        /* КУРСОР — 100% РАБОЧИЙ */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--neon);
+            border-radius: 50%;
             pointer-events: none;
-            z-index: 10;
+            z-index: 9999;
+            box-shadow: 0 0 15px var(--neon);
+            transform: translate(-50%, -50%);
+            transition: width 0.15s ease, height 0.15s ease, box-shadow 0.2s ease;
+            mix-blend-mode: difference;
+        }
+        .cursor::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 6px; height: 6px;
+            background: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.9;
+        }
+        .cursor.hover {
+            width: 36px;
+            height: 36px;
+            box-shadow: 0 0 25px var(--neon), 0 0 50px var(--neon);
         }
 
         /* Размытие при открытой палитре */
         body.blur::before {
             content: '';
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
             z-index: 98;
-            pointer-events: none;
             opacity: 0;
             transition: opacity 0.4s ease;
         }
         body.blur.show-blur::before { opacity: 1; }
 
-        /* КУРСОР */
-        .cursor {
-            position: fixed;
-            width: 18px; height: 18px;
-            background: var(--neon);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            box-shadow: 0 0 12px var(--neon);
-            transform: translate(-50%, -50%);
-            mix-blend-mode: difference;
-            transition: width 0.15s ease, height 0.15s ease, box-shadow 0.2s ease;
-        }
-        .cursor::after {
-            content: ''; position: absolute; top: 50%; left: 50%;
-            width: 6px; height: 6px; background: white; border-radius: 50%;
-            transform: translate(-50%, -50%); opacity: 0.8;
-        }
-        .cursor.hover { width: 30px; height: 30px; box-shadow: 0 0 20px var(--neon), 0 0 35px var(--neon); }
-
-        /* КОНТЕЙНЕР */
         .container {
-            text-align: center; padding: 40px 30px; background: var(--card);
-            border-radius: 20px; border: 1px solid var(--border-color);
-            box-shadow: var(--glow-pulse); max-width: 380px; position: relative; z-index: 1;
+            text-align: center;
+            padding: 40px 30px;
+            background: var(--card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--glow-pulse);
+            max-width: 380px;
+            position: relative;
+            z-index: 2;
             animation: pulseGlow 3s infinite alternate ease-in-out;
         }
         @keyframes pulseGlow { 0% { box-shadow: var(--glow-pulse); } 100% { box-shadow: var(--glow-pulse-end); } }
         .container::before {
-            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
-            border-radius: 22px; background: linear-gradient(45deg, transparent, var(--neon), transparent);
-            opacity: 0.15; z-index: -1; animation: borderPulse 4s infinite ease-in-out;
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 22px;
+            background: linear-gradient(45deg, transparent, var(--neon), transparent);
+            opacity: 0.15;
+            z-index: -1;
+            animation: borderPulse 4s infinite ease-in-out;
         }
-        @keyframes borderPulse { 0%, 100% { opacity: 0.15; transform: scale(1); } 50% { opacity: 0.25; transform: scale(1.02); } }
+        @keyframes borderPulse { 0%,100% { opacity: 0.15; transform: scale(1); } 50% { opacity: 0.25; transform: scale(1.02); } }
 
-        .avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: var(--glow); margin-bottom: 16px; object-fit: cover; }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--neon);
+            box-shadow: var(--glow);
+            margin-bottom: 16px;
+            object-fit: cover;
+        }
         h1 { font-size: 2.4em; color: white; text-shadow: 0 0 10px var(--neon); margin: 0 0 8px; }
-        .location, .info p { color: var(--text); }
-        .location { font-size: 0.9em; margin-bottom: 20px; }
-        .info p { font-size: 0.95em; text-shadow: 0 0 5px var(--neon); }
+        .location { font-size: 0.9em; margin-bottom: 20px; color: var(--text); }
+        .info p { font-size: 0.95em; text-shadow: 0 0 5px var(--neon); color: var(--text); }
 
-        .links { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
-        .btn {
-            padding: 14px 28px; background: var(--btn-bg); color: #000; font-weight: 700; font-size: 1em;
-            border: none; border-radius: 16px; cursor: none; position: relative; overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: var(--btn-shadow); min-width: 120px; text-transform: uppercase; letter-spacing: 0.5px;
-            text-decoration: none; display: inline-block; text-align: center;
+        .links {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+            flex-wrap: wrap;
         }
-        .btn::before { content: ''; position: absolute; top: 0; left: -150%; width: 200%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: 0.8s; }
-        .btn:hover { transform: translateY(-8px) scale(1.08); box-shadow: var(--btn-hover-shadow); }
+        .btn {
+            padding: 14px 28px;
+            background: var(--btn-bg);
+            color: #000;
+            font-weight: 700;
+            font-size: 1em;
+            border: none;
+            border-radius: 16px;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: var(--btn-shadow);
+            min-width: 120px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.8s;
+        }
+        .btn:hover {
+            transform: translateY(-8px) scale(1.08);
+            box-shadow: var(--btn-hover-shadow);
+        }
         .btn:hover::before { left: 150%; }
-        .btn.donate { background: linear-gradient(135deg, #ff0088, #ff3399); box-shadow: 0 6px 16px rgba(255, 0, 136, 0.3); }
-        .btn.donate:hover { box-shadow: 0 20px 40px rgba(255, 0, 136, 0.5); }
-
-        /* Радужная кнопка 2026 */
+        .btn.donate {
+            background: linear-gradient(135deg, #ff0088, #ff3399);
+            box-shadow: 0 6px 16px rgba(255,0,136,0.3);
+        }
+        .btn.donate:hover { box-shadow: 0 20px 40px rgba(255,0,136,0.5); }
         .btn.ny2026 {
             background: linear-gradient(45deg, #ff0000, #ff6b00, #ffd800, #00ff00, #0099ff, #8a2be2, #ff00ff);
             background-size: 400% 400%;
             animation: rainbow 10s ease infinite;
             color: white;
-            text-shadow: 0 0 10px rgba(0,0,0,0.7);
+            text-shadow: 0 0 10px #000;
         }
         @keyframes rainbow {
-            0% { background-position: : 0% 50%; }
+            0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* Палитра и переключатель темы */
-        .theme-toggle { position: absolute; top: 20px; right: 20px; background: var(--card); border: 1px solid var(--neon); color: var(--neon); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2em; cursor: none; z-index: 100; transition: all 0.4s ease; }
-        .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--neon); }
+        .theme-toggle {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: var(--card);
+            border: 1px solid var(--neon);
+            color: var(--neon);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            cursor: none;
+            z-index: 100;
+            transition: all 0.4s ease;
+        }
+        .theme-toggle:hover { transform: scale(1.15); box-shadow: 0 0 20px var(--neon); }
 
-        .color-palette { position: absolute; top: 70px; right: 20px; width: 200px; height: 200px; border-radius: 12px; border: 3px solid var(--card); box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 0 2px var(--neon); opacity: 0; visibility: hidden; transform: scale(0.3); transform-origin: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 99; cursor: none; overflow: hidden; pointer-events: none; }
-        .color-palette.show { opacity: 1; visibility: visible; transform: scale(1); pointer-events: auto; }
+        .color-palette {
+            position: absolute;
+            top: 70px; right: 20px;
+            width: 200px; height: 200px;
+            border-radius: 12px;
+            border: 3px solid var(--card);
+            box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 0 2px var(--neon);
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.3);
+            transform-origin: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 99;
+            pointer-events: none;
+        }
+        .color-palette.show {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            pointer-events: auto;
+        }
         .color-palette canvas { width: 100%; height: 100%; border-radius: 9px; }
-        .color-picker-dot { position: absolute; width: 20px; height: 20px; background: transparent; border: 3px solid white; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.6), 0 0 0 2px var(--neon); pointer-events: none; z-index: 10; opacity: 0; transition: all 0.15s ease; transform: translate(-50%, -50%); }
+        .color-picker-dot {
+            position: absolute;
+            width: 20px; height: 20px;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #000, 0 0 0 2px var(--neon);
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.15s ease;
+            transform: translate(-50%, -50%);
+        }
         .color-palette.show .color-picker-dot { opacity: 1; }
 
-        /* Модальные окна */
         .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(12px);
-            display: flex; justify-content: center; align-items: center; z-index: 1000;
-            opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease;
         }
         .modal.show { opacity: 1; visibility: visible; }
         .modal-content {
-            background: var(--card); padding: 28px; border-radius: 16px; border: 1px solid var(--neon);
-            text-align: center; position: relative; width: 90%; max-width: 360px;
-            box-shadow: var(--glow); transform: translateY(-60px) scale(0.7); opacity: 0;
+            background: var(--card);
+            padding: 28px;
+            border-radius: 16px;
+            border: 1px solid var(--neon);
+            text-align: center;
+            width: 90%;
+            max-width: 360px;
+            box-shadow: var(--glow);
+            transform: translateY(-60px) scale(0.7);
+            opacity: 0;
             transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.45s ease;
         }
-        .modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; }
-        .close { position: absolute; top: 8px; right: 12px; font-size: 26px; color: var(--neon); cursor: none; }
-        .modal-btn { display: block; width: 100%; margin: 12px 0; padding: 14px; background: var(--btn-bg); color: #000; font-weight: 700; border: none; border-radius: 16px; cursor: none; text-transform: uppercase; text-decoration: none !important; }
+        .modal.show .modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        .close {
+            position: absolute;
+            top: 8px; right: 12px;
+            font-size: 26px;
+            color: var(--neon);
+            cursor: none;
+        }
+        .modal-btn {
+            display: block;
+            width: 100%;
+            margin: 12px 0;
+            padding: 14px;
+            background: var(--btn-bg);
+            color: #000;
+            font-weight: 700;
+            border: none;
+            border-radius: 16px;
+            cursor: none;
+            text-transform: uppercase;
+            text-decoration: none !important;
+        }
 
-        /* Отсчёт */
         .countdown {
             font-size: 2.4em;
             font-weight: 700;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             margin: 20px 0;
             color: var(--neon);
             text-shadow: 0 0 20px var(--neon);
         }
-        .countdown span { display: inline-block; min-width: 80px; animation: pulse 1.8s infinite; }
-        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
 
         @media (max-width: 480px) {
-            .container { padding: 30px 20px; } h1 { font-size: 2em; }
-            .links { flex-direction: column; gap: 12px; } .btn { width: 100%; max-width: 200px; }
-            .theme-toggle, .color-palette { right: 15px; }
-            .color-palette { top: 65px; width: 160px; height: 160px; }
+            .container { padding: 30px 20px; }
+            h1 { font-size: 2em; }
+            .links { flex-direction: column; gap: 12px; }
+            .btn { width: 100%; max-width: 200px; }
         }
     </style>
 </head>
 <body>
 
     <!-- СНЕЖИНКИ -->
-    <div id="snowflakes"></div>
+    <div class="snow-container" id="snowflakes"></div>
 
-    <!-- КУРСОР -->
+    <!-- КАСТОМНЫЙ КУРСОР -->
     <div class="cursor"></div>
 
-    <!-- ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ / ПАЛИТРА -->
+    <!-- ПАЛИТРА -->
     <button class="theme-toggle" id="themeToggle">
         <i class="fas fa-palette"></i>
     </button>
@@ -222,10 +341,7 @@
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div class="container">
-        <div class="avatar-wrapper">
-            <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/100/00d4ff/000000?text=devodrag'">
-            <div class="santa-hat"></div>
-        </div>
+        <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/100/00d4ff/000000?text=devodrag'">
         <h1>devodrag</h1>
         <p class="location">Russia</p>
         <div class="info"><p>i use heroku userbot</p></div>
@@ -237,13 +353,13 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА С ОТСЧЁТОМ ДО НОВОГО ГОДА -->
+    <!-- МОДАЛКА ОТСЧЁТА ДО 2026 -->
     <div id="countdownModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeCountdown">×</span>
-            <h2 style="color:var(--neon); text-shadow: 0 0 15px var(--neon);">До 2026 года осталось</h2>
+            <h2 style="color:var(--neon); text-shadow:0 0 15px var(--neon);">До 2026 года осталось</h2>
             <div class="countdown" id="countdownTimer">00 : 00 : 00 : 00</div>
-            <p style="font-size:0.9em; opacity:0.8;">дней  часов  минут  секунд</p>
+            <p style="opacity:0.7; font-size:0.9em;">дней  часов  минут  секунд</p>
         </div>
     </div>
 
@@ -266,71 +382,67 @@
     </div>
 
     <script>
-        // === СНЕЖИНКИ ===
+        // СНЕЖИНКИ
         const snowContainer = document.getElementById('snowflakes');
-        for (let i = 0; i < 90; i++) {
-            const snow = document.createElement('div');
-            snow.className = 'snowflake';
-            snow.textContent = ['❅','❆','❄','✻','✽','✾'][Math.floor(Math.random()*6)];
-            snow.style.left = Math.random() * 100 + 'vw';
-            snow.style.animationDuration = (Math.random() * 8 + 8) + 's';
-            snow.style.animationDelay = Math.random() * 10 + 's';
-            snow.style.fontSize = (Math.random() * 14 + 10) + 'px';
-            snow.style.opacity = Math.random() * 0.6 + 0.4;
-            snowContainer.appendChild(snow);
+        for (let i = 0; i < 120; i++) {
+            const s = document.createElement('div');
+            s.className = 'snowflake';
+            s.textContent = ['❅','❆','❄','✻','✽','✾'][Math.floor(Math.random()*6)];
+            s.style.left = Math.random() * 100 + 'vw';
+            s.style.animationDuration = Math.random() * 8 + 10 + 's';
+            s.style.animationDelay = Math.random() * 15 + 's';
+            s.style.fontSize = Math.random() * 14 + 12 + 'px';
+            s.style.opacity = Math.random() * 0.6 + 0.4;
+            snowContainer.appendChild(s);
         }
 
-        // === ОТСЧЁТ ДО НОВОГО ГОДА ===
-        const countdownModal = document.getElementById('countdownModal');
-        const countdownTimer = document.getElementById('countdownTimer');
-        const closeCountdown = document.getElementById('closeCountdown');
-        const nyBtn = document.getElementById('nyBtn');
-        let timerInterval = null;
-
-        function updateCountdown() {
-            const now = new Date();
-            const year = now.getFullYear() + (now.getMonth() === 11 && now.getDate() > 25 ? 1 : 0) + 1; // после 25 декабря — следующий год
-            const newYear = new Date(`January 1, ${now.getFullYear() + 1} 00:00:00`);
-            const diff = newYear - now;
-
-            if (diff <= 0) {
-                countdownTimer.textContent = "С Новым 2026!";
-                clearInterval(timerInterval);
-                return;
-            }
-
-            const d = Math.floor(diff / (1000*60*60*24));
-            const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-            const m = Math.floor((diff % (1000*60*60)) / (1000*60));
-            const s = Math.floor((diff % (1000*60)) / 1000);
-
-            countdownTimer.innerHTML = `${d.toString().padStart(2,'0')} : ${h.toString().padStart(2,'0')} : ${m.toString().padStart(2,'0')} : ${s.toString().padStart(2,'0')}`;
-        }
-
-        nyBtn.onclick = () => {
-            countdownModal.classList.add('show');
-            updateCountdown();
-            timerInterval = setInterval(updateCountdown, 1000);
-        };
-        closeCountdown.onclick = () => {
-            countdownModal.classList.remove('show');
-            clearInterval(timerInterval);
-        };
-        countdownModal.onclick = (e) => { if (e.target === countdownModal) { countdownModal.classList.remove('show'); clearInterval(timerInterval); } };
-
-        // === ТВОИ СТАРЫЕ ФУНКЦИИ (полностью сохранены) ===
+        // КУРСОР
         const cursor = document.querySelector('.cursor');
         document.addEventListener('mousemove', e => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
-
-        document.querySelectorAll('.btn, .theme-toggle, .color-palette, .modal-btn').forEach(el => {
+        document.querySelectorAll('.btn, .theme-toggle, .modal-btn, #nyBtn').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
 
-        // Цветовая палитра
+        // ОТСЧЁТ ДО 2026
+        const countdownModal = document.getElementById('countdownModal');
+        const countdownTimer = document.getElementById('countdownTimer');
+        let timerInterval;
+        function updateCountdown() {
+            const now = new Date();
+            const newYear = new Date(now.getFullYear() + 1, 0, 1);
+            const diff = newYear - now;
+            if (diff <= 0) {
+                countdownTimer.textContent = "С Новым 2026!";
+                clearInterval(timerInterval);
+                return;
+            }
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            countdownTimer.innerHTML = `${d.toString().padStart(2,'0')} : ${h.toString().padStart(2,'0')} : ${m.toString().padStart(2,'0')} : ${s.toString().padStart(2,'0')}`;
+        }
+        document.getElementById('nyBtn').onclick = () => {
+            countdownModal.classList.add('show');
+            updateCountdown();
+            timerInterval = setInterval(updateCountdown, 1000);
+        };
+        document.getElementById('closeCountdown').onclick = () => {
+            countdownModal.classList.remove('show');
+            clearInterval(timerInterval);
+        };
+        countdownModal.onclick = e => {
+            if (e.target === countdownModal) {
+                countdownModal.classList.remove('show');
+                clearInterval(timerInterval);
+            }
+        };
+
+        // ПАЛИТРА И СМЕНА ЦВЕТА
         const updateCSSVariables = (color) => {
             const rgb = hexToRgb(color);
             const darker = shadeColor(color, -30);
@@ -349,7 +461,6 @@
             document.documentElement.style.setProperty('--btn-hover-shadow', `0 20px 40px ${rgbaShadow.replace('0.2', '0.5')}, 0 0 0 2px ${color}`);
             document.documentElement.style.setProperty('--text', textColor);
         };
-
         const hexToRgb = hex => /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) ? { r: parseInt(RegExp.$1, 16), g: parseInt(RegExp.$2, 16), b: parseInt(RegExp.$3, 16) } : null;
         const shadeColor = (color, percent) => {
             let [R, G, B] = [1,3,5].map(i => parseInt(color.slice(i, i+2), 16));
@@ -357,6 +468,7 @@
             return `#${R.toString(16).padStart(2,'0')}${G.toString(16).padStart(2,'0')}${B.toString(16).padStart(2,'0')}`;
         };
         const rgbToHsl = (r,g,b) => { r/=255; g/=255; b/=255; const max=Math.max(r,g,b), min=Math.min(r,g,b); let h,s,l=(max+min)/2; if(max===min) h=s=0; else { const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min); switch(max){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;case b:h=(r-g)/d+4;break} h/=6; } return [h*360,s*100,l*100]; };
+        const hsvToRgb = (h,s,v) => { let r,g,b; const i=Math.floor(h*6); const f=h*6-i; const p=v*(1-s); const q=v*(1-f*s); const t=v*(1-(1-f)*s); switch(i%6){case 0:r=v,g=t,b=p;break;case 1:r=q,g=v,b=p;break;case 2:r=p,g=v,b=t;break;case 3:r=p,g=q,b=v;break;case 4:r=t,g=p,b=v;break;case 5:r=v,g=p,b=q;break} return {r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)}; };
 
         const palette = document.getElementById('colorPalette');
         const canvas = document.getElementById('paletteCanvas');
@@ -376,17 +488,58 @@
                 ctx.fillRect(x, y, 1, 1);
             }
         };
-        const hsvToRgb = (h,s,v) => {
-            let r,g,b; const i=Math.floor(h*6); const f=h*6-i; const p=v*(1-s); const q=v*(1-f*s); const t=v*(1-(1-f)*s);
-            switch(i%6){case 0:r=v,g=t,b=p;break;case 1:r=q,g=v,b=p;break;case 2:r=p,g=v,b=t;break;case 3:r=p,g=q,b=v;break;case 4:r=t,g=p,b=v;break;case 5:r=v,g=p,b=q;break}
-            return {r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)};
-        };
         const getColorAt = (x,y) => {
             const pixel = ctx.getImageData(x, y, 1, 1).data;
             return `#${((pixel[0]<<16)+(pixel[1]<<8)+pixel[2]).toString(16).padStart(6,'0')}`;
         };
-
         drawFullPalette();
 
         toggleBtn.addEventListener('click', e => {
-            e
+            e.stopPropagation();
+            const isOpen = palette.classList.toggle('show');
+            body.classList.toggle('blur', isOpen);
+            body.classList.toggle('show-blur', isOpen);
+            if (isOpen) { dot.style.left = '50%'; dot.style.top = '50%'; }
+            if (!isOpen) isDragging = false;
+        });
+
+        const updatePicker = e => {
+            const rect = canvas.getBoundingClientRect();
+            const x = Math.max(0, Math.min(rect.width-1, e.clientX - rect.left));
+            const y = Math.max(0, Math.min(rect.height-1, e.clientY - rect.top));
+            dot.style.left = `${x}px`;
+            dot.style.top = `${y}px`;
+            const color = getColorAt(Math.floor(x * (canvas.width / rect.width)), Math.floor(y * (canvas.height / rect.height)));
+            updateCSSVariables(color);
+        };
+        canvas.addEventListener('mousedown', e => { isDragging = true; updatePicker(e); });
+        document.addEventListener('mousemove', e => { if (isDragging) updatePicker(e); });
+        document.addEventListener('mouseup', () => { isDragging = false; });
+        canvas.addEventListener('click', updatePicker);
+
+        // ДОНАТЫ
+        const donateBtn = document.getElementById('donateBtn');
+        const donateModal = document.getElementById('donateModal');
+        const xrocketModal = document.getElementById('xrocketModal');
+        const closeDonate = document.getElementById('closeDonate');
+        const closeXRocket = document.getElementById('closeXRocket');
+        const openXRocket = document.getElementById('openXRocket');
+
+        donateBtn.addEventListener('click', () => donateModal.classList.add('show'));
+        closeDonate.addEventListener('click', () => donateModal.classList.remove('show'));
+        openXRocket.addEventListener('click', () => {
+            donateModal.classList.remove('show');
+            setTimeout(() => xrocketModal.classList.add('show'), 250);
+        });
+        closeXRocket.addEventListener('click', () => xrocketModal.classList.remove('show'));
+        window.addEventListener('click', e => {
+            if (e.target.classList.contains('modal')) {
+                donateModal.classList.remove('show');
+                xrocketModal.classList.remove('show');
+                countdownModal.classList.remove('show');
+                clearInterval(timerInterval);
+            }
+        });
+    </script>
+</body>
+</html>
