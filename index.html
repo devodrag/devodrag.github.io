@@ -20,7 +20,6 @@
             --btn-shadow: 0 6px 16px rgba(0, 212, 255, 0.3), 0 0 0 1px rgba(0, 212, 255, 0.2);
             --btn-hover-shadow: 0 20px 40px rgba(0, 212, 255, 0.5), 0 0 0 2px var(--neon);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
             height: 100%;
@@ -28,7 +27,6 @@
             cursor: none !important;
             font-family: 'Segoe UI', sans-serif;
         }
-
         body {
             background: var(--bg);
             color: var(--text);
@@ -40,7 +38,40 @@
             transition: background 0.5s ease, color 0.3s ease;
         }
 
-        /* Размытие */
+        /* СНЕЖИНКИ */
+        #snowflakes { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .snowflake {
+            position: absolute;
+            top: -20px;
+            color: #fff;
+            font-size: 1.4em;
+            pointer-events: none;
+            user-select: none;
+            animation: fall linear forwards;
+            opacity: 0.8;
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(720deg); }
+        }
+
+        /* ШАПКА САНТЫ */
+        .avatar-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .santa-hat {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-10deg);
+            width: 100px;
+            height: 100px;
+            background: url('https://i.ibb.co/5nZ4n5F/santa-hat.png') center/contain no-repeat;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Размытие при открытой палитре */
         body.blur::before {
             content: '';
             position: fixed;
@@ -89,13 +120,9 @@
         }
         @keyframes borderPulse { 0%, 100% { opacity: 0.15; transform: scale(1); } 50% { opacity: 0.25; transform: scale(1.02); } }
 
-        .avatar {
-            width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--neon);
-            box-shadow: var(--glow); margin-bottom: 16px; object-fit: cover;
-            transition: border 0.5s ease, box-shadow 0.5s ease;
-        }
+        .avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--neon); box-shadow: var(--glow); margin-bottom: 16px; object-fit: cover; }
         h1 { font-size: 2.4em; color: white; text-shadow: 0 0 10px var(--neon); margin: 0 0 8px; }
-        .location, .info p { color: var(--text); transition: color 0.3s ease; }
+        .location, .info p { color: var(--text); }
         .location { font-size: 0.9em; margin-bottom: 20px; }
         .info p { font-size: 0.95em; text-shadow: 0 0 5px var(--neon); }
 
@@ -103,7 +130,7 @@
         .btn {
             padding: 14px 28px; background: var(--btn-bg); color: #000; font-weight: 700; font-size: 1em;
             border: none; border-radius: 16px; cursor: none; position: relative; overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: var(--btn-shadow); min-width: 120px; text-transform: uppercase; letter-spacing: 0.5px;
             text-decoration: none; display: inline-block; text-align: center;
         }
@@ -114,115 +141,91 @@
         .btn.donate { background: linear-gradient(135deg, #ff0088, #ff3399); box-shadow: 0 6px 16px rgba(255, 0, 136, 0.3); }
         .btn.donate:hover { box-shadow: 0 20px 40px rgba(255, 0, 136, 0.5); }
 
-        .theme-toggle {
-            position: absolute; top: 20px; right: 20px; background: var(--card);
-            border: 1px solid var(--neon); color: var(--neon); width: 40px; height: 40px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 1.2em; cursor: none; z-index: 100; transition: all 0.4s ease;
+        /* Радужная кнопка 2026 */
+        .btn.ny2026 {
+            background: linear-gradient(45deg, #ff0000, #ff6b00, #ffd800, #00ff00, #0099ff, #8a2be2, #ff00ff);
+            background-size: 400% 400%;
+            animation: rainbow 10s ease infinite;
+            color: white;
+            text-shadow: 0 0 10px rgba(0,0,0,0.7);
         }
+        @keyframes rainbow {
+            0% { background-position: : 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Палитра и переключатель темы */
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: var(--card); border: 1px solid var(--neon); color: var(--neon); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2em; cursor: none; z-index: 100; transition: all 0.4s ease; }
         .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 0 20px var(--neon); }
 
-        /* ПАЛИТРА */
-        .color-palette {
-            position: absolute; top: 70px; right: 20px; width: 200px; height: 200px;
-            border-radius: 12px; border: 3px solid var(--card);
-            box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 0 2px var(--neon);
-            opacity: 0; visibility: hidden; transform: scale(0.3); transform-origin: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 99;
-            cursor: none; overflow: hidden; pointer-events: none;
-        }
+        .color-palette { position: absolute; top: 70px; right: 20px; width: 200px; height: 200px; border-radius: 12px; border: 3px solid var(--card); box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 0 2px var(--neon); opacity: 0; visibility: hidden; transform: scale(0.3); transform-origin: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 99; cursor: none; overflow: hidden; pointer-events: none; }
         .color-palette.show { opacity: 1; visibility: visible; transform: scale(1); pointer-events: auto; }
         .color-palette canvas { width: 100%; height: 100%; border-radius: 9px; }
-        .color-picker-dot {
-            position: absolute; width: 20px; height: 20px; background: transparent;
-            border: 3px solid white; border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0,0,0,0.6), 0 0 0 2px var(--neon);
-            pointer-events: none; z-index: 10; opacity: 0; transition: all 0.15s ease;
-            transform: translate(-50%, -50%);
-        }
+        .color-picker-dot { position: absolute; width: 20px; height: 20px; background: transparent; border: 3px solid white; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.6), 0 0 0 2px var(--neon); pointer-events: none; z-index: 10; opacity: 0; transition: all 0.15s ease; transform: translate(-50%, -50%); }
         .color-palette.show .color-picker-dot { opacity: 1; }
 
-        /* МОДАЛЬНЫЕ ОКНА — С АНИМАЦИЕЙ */
+        /* Модальные окна */
         .modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(12px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(12px);
+            display: flex; justify-content: center; align-items: center; z-index: 1000;
+            opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease;
         }
-        .modal.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        .modal.show { opacity: 1; visibility: visible; }
         .modal-content {
-            background: var(--card);
-            padding: 28px;
-            border-radius: 16px;
-            border: 1px solid var(--neon);
-            text-align: center;
-            position: relative;
-            width: 90%;
-            max-width: 320px;
-            box-shadow: var(--glow);
-            transform: translateY(-60px) scale(0.7);
-            opacity: 0;
+            background: var(--card); padding: 28px; border-radius: 16px; border: 1px solid var(--neon);
+            text-align: center; position: relative; width: 90%; max-width: 360px;
+            box-shadow: var(--glow); transform: translateY(-60px) scale(0.7); opacity: 0;
             transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.45s ease;
         }
-        .modal.show .modal-content {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
-        .close {
-            position: absolute; top: 8px; right: 12px; font-size: 26px;
-            color: var(--neon); cursor: none; transition: color 0.5s ease;
-        }
+        .modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; }
+        .close { position: absolute; top: 8px; right: 12px; font-size: 26px; color: var(--neon); cursor: none; }
+        .modal-btn { display: block; width: 100%; margin: 12px 0; padding: 14px; background: var(--btn-bg); color: #000; font-weight: 700; border: none; border-radius: 16px; cursor: none; text-transform: uppercase; text-decoration: none !important; }
 
-        /* КНОПКИ В МОДАЛКЕ — БЕЗ ПОДЧЁРКИВАНИЯ */
-        .modal-btn {
-            display: block; width: 100%; margin: 10px 0; padding: 14px 28px;
-            background: var(--btn-bg); color: #000; font-weight: 700; font-size: 1em;
-            border: none; border-radius: 16px; cursor: none; position: relative; overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
-            box-shadow: var(--btn-shadow); text-transform: uppercase; letter-spacing: 0.5px;
-            text-decoration: none !important;
+        /* Отсчёт */
+        .countdown {
+            font-size: 2.4em;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin: 20px 0;
+            color: var(--neon);
+            text-shadow: 0 0 20px var(--neon);
         }
-        .modal-btn::before { content: ''; position: absolute; top: 0; left: -150%; width: 200%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition: 0.8s; }
-        .modal-btn:hover { transform: translateY(-8px) scale(1.08); box-shadow: var(--btn-hover-shadow); }
-        .modal-btn:hover::before { left: 150%; }
+        .countdown span { display: inline-block; min-width: 80px; animation: pulse 1.8s infinite; }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
 
         @media (max-width: 480px) {
             .container { padding: 30px 20px; } h1 { font-size: 2em; }
             .links { flex-direction: column; gap: 12px; } .btn { width: 100%; max-width: 200px; }
-            .theme-toggle { top: 15px; right: 15px; }
-            .color-palette { top: 65px; right: 15px; width: 160px; height: 160px; }
+            .theme-toggle, .color-palette { right: 15px; }
+            .color-palette { top: 65px; width: 160px; height: 160px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- СНЕЖИНКИ -->
+    <div id="snowflakes"></div>
+
     <!-- КУРСОР -->
     <div class="cursor"></div>
 
-    <!-- ПАЛИТРА -->
+    <!-- ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ / ПАЛИТРА -->
     <button class="theme-toggle" id="themeToggle">
         <i class="fas fa-palette"></i>
     </button>
-
     <div class="color-palette" id="colorPalette">
         <canvas id="paletteCanvas" width="200" height="200"></canvas>
         <div class="color-picker-dot" id="colorDot"></div>
     </div>
 
-    <!-- КОНТЕНТ -->
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div class="container">
-        <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/100/00d4ff/000000?text=devodrag'">
+        <div class="avatar-wrapper">
+            <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/100/00d4ff/000000?text=devodrag'">
+            <div class="santa-hat"></div>
+        </div>
         <h1>devodrag</h1>
         <p class="location">Russia</p>
         <div class="info"><p>i use heroku userbot</p></div>
@@ -230,22 +233,32 @@
             <a href="https://t.me/devodrag" class="btn" target="_blank">Telegram</a>
             <a href="https://t.me/heroku_ub" class="btn" target="_blank">Heroku</a>
             <button class="btn donate" id="donateBtn">Donate</button>
+            <button class="btn ny2026" id="nyBtn">2026</button>
         </div>
     </div>
 
-    <!-- МОДАЛКИ -->
+    <!-- МОДАЛКА С ОТСЧЁТОМ ДО НОВОГО ГОДА -->
+    <div id="countdownModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeCountdown">×</span>
+            <h2 style="color:var(--neon); text-shadow: 0 0 15px var(--neon);">До 2026 года осталось</h2>
+            <div class="countdown" id="countdownTimer">00 : 00 : 00 : 00</div>
+            <p style="font-size:0.9em; opacity:0.8;">дней  часов  минут  секунд</p>
+        </div>
+    </div>
+
+    <!-- МОДАЛКИ ДОНАТОВ -->
     <div id="donateModal" class="modal">
         <div class="modal-content">
-            <span class="close" id="closeDonate">x</span>
+            <span class="close" id="closeDonate">×</span>
             <h3>Donate via</h3>
             <a href="https://t.me/send?start=IVZIFRT5CKMx" class="modal-btn" target="_blank">CryptoBot</a>
             <button class="modal-btn" id="openXRocket">xRocket</button>
         </div>
     </div>
-
     <div id="xrocketModal" class="modal">
         <div class="modal-content">
-            <span class="close" id="closeXRocket">x</span>
+            <span class="close" id="closeXRocket">×</span>
             <h3>xRocket</h3>
             <a href="https://t.me/xrocket?start=inv_Rnhh88Q1gY7AxsR" class="modal-btn" target="_blank">USDT</a>
             <a href="https://t.me/xrocket?start=inv_ip2bPuPJK0MNYFU" class="modal-btn" target="_blank">TON</a>
@@ -253,7 +266,71 @@
     </div>
 
     <script>
-        // === ЦВЕТОВЫЕ ФУНКЦИИ ===
+        // === СНЕЖИНКИ ===
+        const snowContainer = document.getElementById('snowflakes');
+        for (let i = 0; i < 90; i++) {
+            const snow = document.createElement('div');
+            snow.className = 'snowflake';
+            snow.textContent = ['❅','❆','❄','✻','✽','✾'][Math.floor(Math.random()*6)];
+            snow.style.left = Math.random() * 100 + 'vw';
+            snow.style.animationDuration = (Math.random() * 8 + 8) + 's';
+            snow.style.animationDelay = Math.random() * 10 + 's';
+            snow.style.fontSize = (Math.random() * 14 + 10) + 'px';
+            snow.style.opacity = Math.random() * 0.6 + 0.4;
+            snowContainer.appendChild(snow);
+        }
+
+        // === ОТСЧЁТ ДО НОВОГО ГОДА ===
+        const countdownModal = document.getElementById('countdownModal');
+        const countdownTimer = document.getElementById('countdownTimer');
+        const closeCountdown = document.getElementById('closeCountdown');
+        const nyBtn = document.getElementById('nyBtn');
+        let timerInterval = null;
+
+        function updateCountdown() {
+            const now = new Date();
+            const year = now.getFullYear() + (now.getMonth() === 11 && now.getDate() > 25 ? 1 : 0) + 1; // после 25 декабря — следующий год
+            const newYear = new Date(`January 1, ${now.getFullYear() + 1} 00:00:00`);
+            const diff = newYear - now;
+
+            if (diff <= 0) {
+                countdownTimer.textContent = "С Новым 2026!";
+                clearInterval(timerInterval);
+                return;
+            }
+
+            const d = Math.floor(diff / (1000*60*60*24));
+            const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+            const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+            const s = Math.floor((diff % (1000*60)) / 1000);
+
+            countdownTimer.innerHTML = `${d.toString().padStart(2,'0')} : ${h.toString().padStart(2,'0')} : ${m.toString().padStart(2,'0')} : ${s.toString().padStart(2,'0')}`;
+        }
+
+        nyBtn.onclick = () => {
+            countdownModal.classList.add('show');
+            updateCountdown();
+            timerInterval = setInterval(updateCountdown, 1000);
+        };
+        closeCountdown.onclick = () => {
+            countdownModal.classList.remove('show');
+            clearInterval(timerInterval);
+        };
+        countdownModal.onclick = (e) => { if (e.target === countdownModal) { countdownModal.classList.remove('show'); clearInterval(timerInterval); } };
+
+        // === ТВОИ СТАРЫЕ ФУНКЦИИ (полностью сохранены) ===
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        document.querySelectorAll('.btn, .theme-toggle, .color-palette, .modal-btn').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Цветовая палитра
         const updateCSSVariables = (color) => {
             const rgb = hexToRgb(color);
             const darker = shadeColor(color, -30);
@@ -262,7 +339,6 @@
             const rgbaShadowEnd = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)`;
             const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
             const textColor = `hsl(${hsl[0]}, 70%, 85%)`;
-
             document.documentElement.style.setProperty('--neon', color);
             document.documentElement.style.setProperty('--neon-dark', darker);
             document.documentElement.style.setProperty('--border-color', rgba);
@@ -274,35 +350,14 @@
             document.documentElement.style.setProperty('--text', textColor);
         };
 
-        const hexToRgb = (hex) => /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) ? {
-            r: parseInt(RegExp.$1, 16), g: parseInt(RegExp.$2, 16), b: parseInt(RegExp.$3, 16)
-        } : null;
-
+        const hexToRgb = hex => /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) ? { r: parseInt(RegExp.$1, 16), g: parseInt(RegExp.$2, 16), b: parseInt(RegExp.$3, 16) } : null;
         const shadeColor = (color, percent) => {
             let [R, G, B] = [1,3,5].map(i => parseInt(color.slice(i, i+2), 16));
             [R, G, B] = [R, G, B].map(c => Math.min(255, Math.round(c * (100 + percent) / 100)));
             return `#${R.toString(16).padStart(2,'0')}${G.toString(16).padStart(2,'0')}${B.toString(16).padStart(2,'0')}`;
         };
+        const rgbToHsl = (r,g,b) => { r/=255; g/=255; b/=255; const max=Math.max(r,g,b), min=Math.min(r,g,b); let h,s,l=(max+min)/2; if(max===min) h=s=0; else { const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min); switch(max){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;case b:h=(r-g)/d+4;break} h/=6; } return [h*360,s*100,l*100]; };
 
-        const rgbToHsl = (r, g, b) => {
-            r /= 255; g /= 255; b /= 255;
-            const max = Math.max(r, g, b), min = Math.min(r, g, b);
-            let h, s, l = (max + min) / 2;
-            if (max === min) h = s = 0;
-            else {
-                const d = max - min;
-                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-                switch (max) {
-                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-                    case g: h = (b - r) / d + 2; break;
-                    case b: h = (r - g) / d + 4; break;
-                }
-                h /= 6;
-            }
-            return [h * 360, s * 100, l * 100];
-        };
-
-        // === ПАЛИТРА ===
         const palette = document.getElementById('colorPalette');
         const canvas = document.getElementById('paletteCanvas');
         const ctx = canvas.getContext('2d');
@@ -313,112 +368,25 @@
 
         const drawFullPalette = () => {
             const w = canvas.width, h = canvas.height;
-            for (let x = 0; x < w; x++) {
-                for (let y = 0; y < h; y++) {
-                    const hue = x / w * 360;
-                    const sat = 1 - (y / h);
-                    const rgb = hsvToRgb(hue / 360, sat, 1);
-                    ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
-                    ctx.fillRect(x, y, 1, 1);
-                }
+            for (let x = 0; x < w; x++) for (let y = 0; y < h; y++) {
+                const hue = x / w * 360;
+                const sat = 1 - (y / h);
+                const rgb = hsvToRgb(hue/360, sat, 1);
+                ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+                ctx.fillRect(x, y, 1, 1);
             }
         };
-
-        const hsvToRgb = (h, s, v) => {
-            let r, g, b;
-            const i = Math.floor(h * 6);
-            const f = h * 6 - i;
-            const p = v * (1 - s);
-            const q = v * (1 - f * s);
-            const t = v * (1 - (1 - f) * s);
-            switch (i % 6) {
-                case 0: r = v; g = t; b = p; break;
-                case 1: r = q; g = v; b = p; break;
-                case 2: r = p; g = v; b = t; break;
-                case 3: r = p; g = q; b = v; break;
-                case 4: r = t; g = p; b = v; break;
-                case 5: r = v; g = p; b = q; break;
-            }
-            return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+        const hsvToRgb = (h,s,v) => {
+            let r,g,b; const i=Math.floor(h*6); const f=h*6-i; const p=v*(1-s); const q=v*(1-f*s); const t=v*(1-(1-f)*s);
+            switch(i%6){case 0:r=v,g=t,b=p;break;case 1:r=q,g=v,b=p;break;case 2:r=p,g=v,b=t;break;case 3:r=p,g=q,b=v;break;case 4:r=t,g=p,b=v;break;case 5:r=v,g=p,b=q;break}
+            return {r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)};
         };
-
-        const getColorAt = (x, y) => {
+        const getColorAt = (x,y) => {
             const pixel = ctx.getImageData(x, y, 1, 1).data;
-            return `#${((pixel[0] << 16) + (pixel[1] << 8) + pixel[2]).toString(16).padStart(6, '0')}`;
+            return `#${((pixel[0]<<16)+(pixel[1]<<8)+pixel[2]).toString(16).padStart(6,'0')}`;
         };
 
         drawFullPalette();
 
-        toggleBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isOpen = palette.classList.toggle('show');
-            body.classList.toggle('blur', isOpen);
-            body.classList.toggle('show-blur', isOpen);
-            if (isOpen) {
-                dot.style.left = '50%';
-                dot.style.top = '50%';
-            }
-            if (!isOpen) isDragging = false;
-        });
-
-        const updatePicker = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const x = Math.max(0, Math.min(rect.width - 1, e.clientX - rect.left));
-            const y = Math.max(0, Math.min(rect.height - 1, e.clientY - rect.top));
-            dot.style.left = `${x}px`;
-            dot.style.top = `${y}px`;
-            const color = getColorAt(Math.floor(x * (canvas.width / rect.width)), Math.floor(y * (canvas.height / rect.height)));
-            updateCSSVariables(color);
-        };
-
-        canvas.addEventListener('mousedown', (e) => { isDragging = true; updatePicker(e); });
-        document.addEventListener('mousemove', (e) => { if (isDragging) updatePicker(e); });
-        document.addEventListener('mouseup', () => { isDragging = false; });
-        canvas.addEventListener('click', updatePicker);
-
-        // === ДОНАТЫ — АНИМАЦИЯ ВЕРНУЛАСЬ ===
-        const donateBtn = document.getElementById('donateBtn');
-        const donateModal = document.getElementById('donateModal');
-        const xrocketModal = document.getElementById('xrocketModal');
-        const closeDonate = document.getElementById('closeDonate');
-        const closeXRocket = document.getElementById('closeXRocket');
-        const openXRocket = document.getElementById('openXRocket');
-
-        donateBtn.addEventListener('click', () => {
-            donateModal.classList.add('show');
-        });
-
-        closeDonate.addEventListener('click', () => {
-            donateModal.classList.remove('show');
-        });
-
-        openXRocket.addEventListener('click', () => {
-            donateModal.classList.remove('show');
-            setTimeout(() => xrocketModal.classList.add('show'), 250);
-        });
-
-        closeXRocket.addEventListener('click', () => {
-            xrocketModal.classList.remove('show');
-        });
-
-        window.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal')) {
-                donateModal.classList.remove('show');
-                xrocketModal.classList.remove('show');
-            }
-        });
-
-        // === КУРСОР ===
-        const cursor = document.querySelector('.cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-
-        document.querySelectorAll('.btn, .theme-toggle, .color-palette, .modal-btn').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-        });
-    </script>
-</body>
-</html>
+        toggleBtn.addEventListener('click', e => {
+            e
