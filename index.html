@@ -7,11 +7,11 @@
     <style>
         body {
             background: #ffffff;
-            color: #000000;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #333333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 60px 20px;
-            line-height: 1.7;
+            line-height: 1.8;
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
@@ -19,83 +19,93 @@
         .container {
             max-width: 800px;
             margin: 0 auto;
-            text-align: center;
+            text-align: left;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
         .avatar {
-            width: 140px;
-            height: 140px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            margin-bottom: 30px;
+            display: block;
+            margin: 0 auto 30px;
             object-fit: cover;
-            border: 5px solid #333333;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 4px solid #333333;
         }
         h1 {
-            font-size: 3.5em;
-            margin: 0.2em 0 0.4em;
+            font-size: 3.2em;
+            text-align: center;
+            margin: 0 0 10px;
             color: #000000;
+            font-weight: bold;
         }
         .subtitle {
+            text-align: center;
             font-size: 1.4em;
-            color: #333333;
+            color: #555555;
             margin-bottom: 50px;
+            font-style: italic;
         }
         h2 {
             font-size: 2.2em;
-            margin: 60px 0 30px;
+            margin: 50px 0 20px;
             color: #000000;
+            border-bottom: 2px solid #eeeeee;
+            padding-bottom: 10px;
         }
-        ul {
-            list-style: none;
-            padding: 0;
-            text-align: left;
-            max-width: 600px;
-            margin: 0 auto 40px;
-        }
-        li {
-            margin: 15px 0;
-            font-size: 1.2em;
-            padding-left: 10px;
-        }
-        li strong {
-            color: #000000;
-        }
-        .project {
-            text-align: left;
-            max-width: 600px;
-            margin: 0 auto 40px;
-        }
-        .project h3 {
+        h3 {
             font-size: 1.8em;
             margin: 40px 0 10px;
             color: #000000;
         }
-        .project p {
-            font-size: 1.1em;
-            margin: 10px 0;
-            color: #333333;
+        ul {
+            list-style: none;
+            padding-left: 20px;
+            margin: 20px 0;
         }
-        .project a {
-            font-size: 1.1em;
+        li {
+            margin: 12px 0;
+            font-size: 1.2em;
+            position: relative;
+        }
+        li:before {
+            content: "•";
+            color: #000000;
+            font-weight: bold;
+            position: absolute;
+            left: -20px;
+        }
+        strong {
+            color: #000000;
+        }
+        a {
             color: #0066cc;
             text-decoration: none;
         }
-        .project a:hover {
+        a:hover {
             text-decoration: underline;
         }
+        .project {
+            margin-bottom: 40px;
+        }
+        .project p {
+            margin: 10px 0;
+            font-size: 1.1em;
+            color: #333333;
+        }
         .separator {
-            border-bottom: 2px solid #cccccc;
-            margin: 60px auto;
-            width: 70%;
+            border-bottom: 1px dashed #cccccc;
+            margin: 60px 0;
         }
         .contacts {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
+            text-align: center;
             margin: 50px 0;
-            font-size: 3em;
+            font-size: 2.8em;
         }
         .contacts a {
+            margin: 0 30px;
             color: #000000;
             transition: transform 0.3s ease, color 0.3s ease;
         }
@@ -104,7 +114,7 @@
             color: #0066cc;
         }
 
-        /* Снежинки — новогодний акцент */
+        /* Снежинки */
         .snow-container {
             position: fixed;
             top: 0;
@@ -112,11 +122,11 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1;
+            z-index: -1;
         }
         .snowflake {
             position: absolute;
-            color: #cccccc;
+            color: #dddddd;
             font-size: 1.5em;
             pointer-events: none;
             user-select: none;
@@ -124,17 +134,18 @@
             opacity: 0.7;
         }
         @keyframes fall {
-            0% {
-                transform: translateY(-100vh) translateX(0) rotate(0deg);
-            }
-            100% {
-                transform: translateY(110vh) translateX(100px) rotate(720deg);
-            }
+            0% { transform: translateY(-100vh) translateX(0) rotate(0deg); }
+            100% { transform: translateY(110vh) translateX(100px) rotate(720deg); }
         }
 
-        /* Отсчёт до Нового года */
+        /* Отсчёт */
         .countdown-section {
+            text-align: center;
             margin: 80px 0;
+            padding: 40px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         .countdown-title {
             font-size: 2.2em;
@@ -146,18 +157,19 @@
             font-weight: bold;
             letter-spacing: 5px;
             color: #000000;
-            margin: 30px 0;
         }
         .countdown-label {
             font-size: 1.1em;
-            color: #333333;
+            color: #555555;
+            margin-top: 10px;
         }
 
         @media (max-width: 600px) {
-            .avatar { width: 120px; height: 120px; }
+            .container { padding: 20px; }
+            .avatar { width: 100px; height: 100px; }
             h1 { font-size: 2.8em; }
             .countdown { font-size: 2.5em; }
-            .contacts { font-size: 2.5em; gap: 30px; }
+            .contacts { font-size: 2.2em; }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -168,7 +180,7 @@
     <div class="snow-container" id="snowflakes"></div>
 
     <div class="container">
-        <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/140/333333/ffffff?text=devodrag'">
+        <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/120/333333/ffffff?text=devodrag'">
 
         <h1>devodrag</h1>
         <p class="subtitle">Разработчик Telegram-ботов и скриптов</p>
@@ -206,7 +218,7 @@
             <a href="mailto:euesswekgpt@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
         </div>
 
-        <!-- Отсчёт до Нового 2026 года -->
+        <!-- Отсчёт до Нового года -->
         <div class="countdown-section">
             <div class="countdown-title">До 2026 года осталось</div>
             <div class="countdown" id="countdownTimer">00 : 00 : 00 : 00</div>
@@ -255,7 +267,6 @@
                 seconds.toString().padStart(2, '0');
         }
 
-        // Обновляем сразу и каждую секунду
         updateCountdown();
         setInterval(updateCountdown, 1000);
     </script>
