@@ -6,19 +6,19 @@
     <title>devodrag</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             margin: 0;
             padding: 0;
-            height: 100vh;
+            min-height: 200vh; /* Растягиваем страницу для скролла */
             background: linear-gradient(135deg, #2a0845, #4a148c, #6a1b9a);
             background-size: 400% 400%;
             animation: gradientShift 20s ease infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #e0e0e0;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
         }
         @keyframes gradientShift {
@@ -29,7 +29,7 @@
 
         /* Снежинки - маленькие белые точки */
         .snow-container {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -55,9 +55,9 @@
             }
         }
 
-        /* Новогодние гирлянды - цветные линии с лампочками */
+        /* Новогодние гирлянды */
         .garland {
-            position: absolute;
+            position: fixed;
             width: 100%;
             height: 100%;
             pointer-events: none;
@@ -70,20 +70,6 @@
             background: repeating-linear-gradient(to right, transparent 0, transparent 20px, #333 20px, #333 40px);
             opacity: 0.6;
         }
-        .garland-line::before, .garland-line::after {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            box-shadow: 0 0 15px currentColor;
-        }
-        .garland-line:nth-child(1) { top: 10%; transform: rotate(3deg); }
-        .garland-line:nth-child(2) { top: 25%; transform: rotate(-2deg); }
-        .garland-line:nth-child(3) { top: 40%; transform: rotate(4deg); }
-        .garland-line:nth-child(4) { top: 55%; transform: rotate(-3deg); }
-        .garland-line:nth-child(5) { top: 70%; transform: rotate(2deg); }
-
         .lights {
             position: absolute;
             top: -5px;
@@ -118,6 +104,7 @@
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 10;
+            margin: 10vh auto 5vh;
         }
         .avatar-container {
             position: relative;
@@ -131,15 +118,18 @@
             object-fit: cover;
             border: 4px solid #ffffff33;
         }
+        /* Реальная шапка Санты поверх аватара (картинка с прозрачностью) */
         .santa-hat {
             position: absolute;
-            top: -25px;
-            right: -15px;
-            width: 60px;
-            height: 60px;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/9/96/Santa_Claus_hat.svg') no-repeat center/contain;
-            transform: rotate(15deg);
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-10deg);
+            width: 100px;
+            height: auto;
+            pointer-events: none;
+            z-index: 11;
         }
+
         h1 {
             font-size: 3em;
             margin: 10px 0;
@@ -251,28 +241,31 @@
             transform: scale(1.3);
         }
 
-        /* Отсчёт до 2026 */
+        /* Отсчёт до 2026 — теперь внизу страницы */
         .countdown-section {
-            margin-top: 50px;
-            padding: 20px;
+            margin: 100px auto 50px;
+            padding: 30px;
             background: rgba(187, 134, 252, 0.1);
             border-radius: 16px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
         }
         .countdown-title {
-            font-size: 1.4em;
+            font-size: 1.6em;
             color: #bb86fc;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         .countdown {
-            font-size: 2.5em;
+            font-size: 3em;
             font-weight: bold;
             letter-spacing: 5px;
             color: #ffffff;
         }
         .countdown-label {
-            font-size: 0.9em;
+            font-size: 1em;
             opacity: 0.8;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         @media (max-width: 600px) {
@@ -284,6 +277,9 @@
             }
             .card {
                 padding: 30px 20px;
+            }
+            .countdown {
+                font-size: 2.2em;
             }
         }
     </style>
@@ -300,7 +296,8 @@
     <div class="card">
         <div class="avatar-container">
             <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/120/6a1b9a/ffffff?text=D'">
-            <div class="santa-hat"></div>
+            <!-- Реальная новогодняя шапка Санты (PNG с прозрачностью) -->
+            <img src="https://i.ibb.co/4pX7k7K/santa-hat.png" alt="Santa Hat" class="santa-hat">
         </div>
 
         <h1>devodrag</h1>
@@ -354,12 +351,13 @@
             <a href="https://github.com/devodrag" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
             <a href="mailto:euesswekgpt@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
         </div>
+    </div>
 
-        <div class="countdown-section">
-            <div class="countdown-title">До 2026 года осталось</div>
-            <div class="countdown" id="countdownTimer">00 : 00 : 00 : 00</div>
-            <div class="countdown-label">дней  часов  минут  секунд</div>
-        </div>
+    <!-- Отсчёт до 2026 — теперь ниже, чтобы был скролл -->
+    <div class="countdown-section">
+        <div class="countdown-title">До 2026 года осталось</div>
+        <div class="countdown" id="countdownTimer">00 : 00 : 00 : 00</div>
+        <div class="countdown-label">дней  часов  минут  секунд</div>
     </div>
 
     <script>
@@ -377,17 +375,19 @@
             snowContainer.appendChild(snowflake);
         }
 
-        // Генерация гирлянд
+        // Генерация гирлянд (5 линий)
         const garlandContainer = document.getElementById('garlands');
         for (let i = 1; i <= 5; i++) {
             const line = document.createElement('div');
             line.className = 'garland-line';
+            line.style.top = (i * 18) + '%';
+            line.style.transform = `rotate(${i % 2 === 0 ? '' : '-'}3deg)`;
             const lights = document.createElement('div');
             lights.className = 'lights';
-            for (let j = 0; j < 30; j++) {
+            for (let j = 0; j < 35; j++) {
                 const light = document.createElement('div');
                 light.className = 'light';
-                light.style.left = j * 3.33 + '%';
+                light.style.left = j * (100 / 35) + '%';
                 light.style.animationDelay = Math.random() * 4 + 's';
                 lights.appendChild(light);
             }
