@@ -4,542 +4,260 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>devodrag</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        :root {
-            --neon: #00d4ff;
-            --neon-dark: #0099cc;
-            --bg: #0a0a0a;
-            --card: #111;
-            --text: #e0f7ff;
-            --glow: 0 0 15px var(--neon), 0 0 30px var(--neon);
-            --glow-pulse: 0 0 30px rgba(0, 212, 255, 0.2);
-            --glow-pulse-end: 0 0 35px rgba(0, 212, 255, 0.25);
-            --border-color: rgba(0, 212, 255, 0.3);
-            --btn-bg: linear-gradient(135deg, #00b8e6, #00d4ff);
-            --btn-shadow: 0 6px 16px rgba(0, 212, 255, 0.3), 0 0 0 1px rgba(0, 212, 255, 0.2);
-            --btn-hover-shadow: 0 20px 40px rgba(0, 212, 255, 0.5), 0 0 0 2px var(--neon);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body {
-            height: 100%;
-            overflow: hidden;
-            cursor: none !important;
-            font-family: 'Segoe UI', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-        }
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: #ffffff;
+            color: #000000;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 60px 20px;
+            line-height: 1.7;
             min-height: 100vh;
             position: relative;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin-bottom: 30px;
+            object-fit: cover;
+            border: 5px solid #333333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 3.5em;
+            margin: 0.2em 0 0.4em;
+            color: #000000;
+        }
+        .subtitle {
+            font-size: 1.4em;
+            color: #333333;
+            margin-bottom: 50px;
+        }
+        h2 {
+            font-size: 2.2em;
+            margin: 60px 0 30px;
+            color: #000000;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        li {
+            margin: 15px 0;
+            font-size: 1.2em;
+            padding-left: 10px;
+        }
+        li strong {
+            color: #000000;
+        }
+        .project {
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        .project h3 {
+            font-size: 1.8em;
+            margin: 40px 0 10px;
+            color: #000000;
+        }
+        .project p {
+            font-size: 1.1em;
+            margin: 10px 0;
+            color: #333333;
+        }
+        .project a {
+            font-size: 1.1em;
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .project a:hover {
+            text-decoration: underline;
+        }
+        .separator {
+            border-bottom: 2px solid #cccccc;
+            margin: 60px auto;
+            width: 70%;
+        }
+        .contacts {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 50px 0;
+            font-size: 3em;
+        }
+        .contacts a {
+            color: #000000;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .contacts a:hover {
+            transform: scale(1.3);
+            color: #0066cc;
         }
 
-        /* СНЕЖИНКИ — РАБОТАЮТ */
+        /* Снежинки — новогодний акцент */
         .snow-container {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 1;
         }
         .snowflake {
             position: absolute;
-            color: #ffffff;
-            font-size: 1.4em;
+            color: #cccccc;
+            font-size: 1.5em;
             pointer-events: none;
             user-select: none;
             animation: fall linear infinite;
-            opacity: 0.8;
+            opacity: 0.7;
         }
         @keyframes fall {
-            0% { transform: translateY(-100vh) translateX(0) rotate(0deg); }
-            100% { transform: translateY(110vh) translateX(80px) rotate(720deg); }
+            0% {
+                transform: translateY(-100vh) translateX(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(110vh) translateX(100px) rotate(720deg);
+            }
         }
 
-        /* КУРСОР — 100% РАБОЧИЙ */
-        .cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            background: var(--neon);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            box-shadow: 0 0 15px var(--neon);
-            transform: translate(-50%, -50%);
-            transition: width 0.15s ease, height 0.15s ease, box-shadow 0.2s ease;
-            mix-blend-mode: difference;
+        /* Отсчёт до Нового года */
+        .countdown-section {
+            margin: 80px 0;
         }
-        .cursor::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 6px; height: 6px;
-            background: white;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0.9;
+        .countdown-title {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            color: #000000;
         }
-        .cursor.hover {
-            width: 36px;
-            height: 36px;
-            box-shadow: 0 0 25px var(--neon), 0 0 50px var(--neon);
-        }
-
-        /* Размытие при открытой палитре */
-        body.blur::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(10px);
-            z-index: 98;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        body.blur.show-blur::before { opacity: 1; }
-
-        .container {
-            text-align: center;
-            padding: 40px 30px;
-            background: var(--card);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--glow-pulse);
-            max-width: 380px;
-            position: relative;
-            z-index: 2;
-            animation: pulseGlow 3s infinite alternate ease-in-out;
-        }
-        @keyframes pulseGlow { 0% { box-shadow: var(--glow-pulse); } 100% { box-shadow: var(--glow-pulse-end); } }
-        .container::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 22px;
-            background: linear-gradient(45deg, transparent, var(--neon), transparent);
-            opacity: 0.15;
-            z-index: -1;
-            animation: borderPulse 4s infinite ease-in-out;
-        }
-        @keyframes borderPulse { 0%,100% { opacity: 0.15; transform: scale(1); } 50% { opacity: 0.25; transform: scale(1.02); } }
-
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 3px solid var(--neon);
-            box-shadow: var(--glow);
-            margin-bottom: 16px;
-            object-fit: cover;
-        }
-        h1 { font-size: 2.4em; color: white; text-shadow: 0 0 10px var(--neon); margin: 0 0 8px; }
-        .location { font-size: 0.9em; margin-bottom: 20px; color: var(--text); }
-        .info p { font-size: 0.95em; text-shadow: 0 0 5px var(--neon); color: var(--text); }
-
-        .links {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 24px;
-            flex-wrap: wrap;
-        }
-        .btn {
-            padding: 14px 28px;
-            background: var(--btn-bg);
-            color: #000;
-            font-weight: 700;
-            font-size: 1em;
-            border: none;
-            border-radius: 16px;
-            cursor: none;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: var(--btn-shadow);
-            min-width: 120px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -150%;
-            width: 200%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: 0.8s;
-        }
-        .btn:hover {
-            transform: translateY(-8px) scale(1.08);
-            box-shadow: var(--btn-hover-shadow);
-        }
-        .btn:hover::before { left: 150%; }
-        .btn.donate {
-            background: linear-gradient(135deg, #ff0088, #ff3399);
-            box-shadow: 0 6px 16px rgba(255,0,136,0.3);
-        }
-        .btn.donate:hover { box-shadow: 0 20px 40px rgba(255,0,136,0.5); }
-        .btn.ny2026 {
-            background: linear-gradient(45deg, #ff0000, #ff6b00, #ffd800, #00ff00, #0099ff, #8a2be2, #ff00ff);
-            background-size: 400% 400%;
-            animation: rainbow 10s ease infinite;
-            color: white;
-            text-shadow: 0 0 10px #000;
-        }
-        @keyframes rainbow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .theme-toggle {
-            position: absolute;
-            top: 20px; right: 20px;
-            background: var(--card);
-            border: 1px solid var(--neon);
-            color: var(--neon);
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2em;
-            cursor: none;
-            z-index: 100;
-            transition: all 0.4s ease;
-        }
-        .theme-toggle:hover { transform: scale(1.15); box-shadow: 0 0 20px var(--neon); }
-
-        .color-palette {
-            position: absolute;
-            top: 70px; right: 20px;
-            width: 200px; height: 200px;
-            border-radius: 12px;
-            border: 3px solid var(--card);
-            box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 0 2px var(--neon);
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.3);
-            transform-origin: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 99;
-            pointer-events: none;
-        }
-        .color-palette.show {
-            opacity: 1;
-            visibility: visible;
-            transform: scale(1);
-            pointer-events: auto;
-        }
-        .color-palette canvas { width: 100%; height: 100%; border-radius: 9px; }
-        .color-picker-dot {
-            position: absolute;
-            width: 20px; height: 20px;
-            border: 3px solid white;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #000, 0 0 0 2px var(--neon);
-            pointer-events: none;
-            opacity: 0;
-            transition: all 0.15s ease;
-            transform: translate(-50%, -50%);
-        }
-        .color-palette.show .color-picker-dot { opacity: 1; }
-
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.92);
-            backdrop-filter: blur(12px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.4s ease;
-        }
-        .modal.show { opacity: 1; visibility: visible; }
-        .modal-content {
-            background: var(--card);
-            padding: 28px;
-            border-radius: 16px;
-            border: 1px solid var(--neon);
-            text-align: center;
-            width: 90%;
-            max-width: 360px;
-            box-shadow: var(--glow);
-            transform: translateY(-60px) scale(0.7);
-            opacity: 0;
-            transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.45s ease;
-        }
-        .modal.show .modal-content {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
-        .close {
-            position: absolute;
-            top: 8px; right: 12px;
-            font-size: 26px;
-            color: var(--neon);
-            cursor: none;
-        }
-        .modal-btn {
-            display: block;
-            width: 100%;
-            margin: 12px 0;
-            padding: 14px;
-            background: var(--btn-bg);
-            color: #000;
-            font-weight: 700;
-            border: none;
-            border-radius: 16px;
-            cursor: none;
-            text-transform: uppercase;
-            text-decoration: none !important;
-        }
-
         .countdown {
-            font-size: 2.4em;
-            font-weight: 700;
-            letter-spacing: 4px;
-            margin: 20px 0;
-            color: var(--neon);
-            text-shadow: 0 0 20px var(--neon);
+            font-size: 3.5em;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #000000;
+            margin: 30px 0;
+        }
+        .countdown-label {
+            font-size: 1.1em;
+            color: #333333;
         }
 
-        @media (max-width: 480px) {
-            .container { padding: 30px 20px; }
-            h1 { font-size: 2em; }
-            .links { flex-direction: column; gap: 12px; }
-            .btn { width: 100%; max-width: 200px; }
+        @media (max-width: 600px) {
+            .avatar { width: 120px; height: 120px; }
+            h1 { font-size: 2.8em; }
+            .countdown { font-size: 2.5em; }
+            .contacts { font-size: 2.5em; gap: 30px; }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- СНЕЖИНКИ -->
+    <!-- Снежинки -->
     <div class="snow-container" id="snowflakes"></div>
 
-    <!-- КАСТОМНЫЙ КУРСОР -->
-    <div class="cursor"></div>
-
-    <!-- ПАЛИТРА -->
-    <button class="theme-toggle" id="themeToggle">
-        <i class="fas fa-palette"></i>
-    </button>
-    <div class="color-palette" id="colorPalette">
-        <canvas id="paletteCanvas" width="200" height="200"></canvas>
-        <div class="color-picker-dot" id="colorDot"></div>
-    </div>
-
-    <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div class="container">
-        <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/100/00d4ff/000000?text=devodrag'">
+        <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/140/333333/ffffff?text=devodrag'">
+
         <h1>devodrag</h1>
-        <p class="location">Russia</p>
-        <div class="info"><p>i use heroku userbot</p></div>
-        <div class="links">
-            <a href="https://t.me/devodrag" class="btn" target="_blank">Telegram</a>
-            <a href="https://t.me/heroku_ub" class="btn" target="_blank">Heroku</a>
-            <button class="btn donate" id="donateBtn">Donate</button>
-            <button class="btn ny2026" id="nyBtn">2026</button>
-        </div>
-    </div>
+        <p class="subtitle">Разработчик Telegram-ботов и скриптов</p>
 
-    <!-- МОДАЛКА ОТСЧЁТА ДО 2026 -->
-    <div id="countdownModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeCountdown">×</span>
-            <h2 style="color:var(--neon); text-shadow:0 0 15px var(--neon);">До 2026 года осталось</h2>
+        <h2>Технологии</h2>
+        <ul>
+            <li><strong>Основные языки:</strong> Python, JavaScript, Lua</li>
+        </ul>
+
+        <h2>Хобби</h2>
+        <ul>
+            <li>💻 Кодинг</li>
+        </ul>
+
+        <h2>Проекты</h2>
+
+        <div class="project">
+            <h3>Frogy Price</h3>
+            <p>Курс криптовалюты каждые 5 минут</p>
+            <p><a href="https://t.me/pricesforcrypto" target="_blank">https://t.me/pricesforcrypto</a></p>
+        </div>
+
+        <div class="project">
+            <h3>CurrencyPrice</h3>
+            <p>Курс валют каждые 30 минут</p>
+            <p><a href="https://t.me/priceforcurrency" target="_blank">https://t.me/priceforcurrency</a></p>
+        </div>
+
+        <div class="separator"></div>
+
+        <h2>Связаться со мной</h2>
+        <div class="contacts">
+            <a href="https://t.me/devodrag" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+            <a href="https://github.com/devodrag" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="mailto:euesswekgpt@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+
+        <!-- Отсчёт до Нового 2026 года -->
+        <div class="countdown-section">
+            <div class="countdown-title">До 2026 года осталось</div>
             <div class="countdown" id="countdownTimer">00 : 00 : 00 : 00</div>
-            <p style="opacity:0.7; font-size:0.9em;">дней  часов  минут  секунд</p>
-        </div>
-    </div>
-
-    <!-- МОДАЛКИ ДОНАТОВ -->
-    <div id="donateModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeDonate">×</span>
-            <h3>Donate via</h3>
-            <a href="https://t.me/send?start=IVZIFRT5CKMx" class="modal-btn" target="_blank">CryptoBot</a>
-            <button class="modal-btn" id="openXRocket">xRocket</button>
-        </div>
-    </div>
-    <div id="xrocketModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeXRocket">×</span>
-            <h3>xRocket</h3>
-            <a href="https://t.me/xrocket?start=inv_Rnhh88Q1gY7AxsR" class="modal-btn" target="_blank">USDT</a>
-            <a href="https://t.me/xrocket?start=inv_ip2bPuPJK0MNYFU" class="modal-btn" target="_blank">TON</a>
+            <div class="countdown-label">дней  часов  минут  секунд</div>
         </div>
     </div>
 
     <script>
-        // СНЕЖИНКИ
+        // Генерация снежинок
         const snowContainer = document.getElementById('snowflakes');
-        for (let i = 0; i < 120; i++) {
-            const s = document.createElement('div');
-            s.className = 'snowflake';
-            s.textContent = ['❅','❆','❄','✻','✽','✾'][Math.floor(Math.random()*6)];
-            s.style.left = Math.random() * 100 + 'vw';
-            s.style.animationDuration = Math.random() * 8 + 10 + 's';
-            s.style.animationDelay = Math.random() * 15 + 's';
-            s.style.fontSize = Math.random() * 14 + 12 + 'px';
-            s.style.opacity = Math.random() * 0.6 + 0.4;
-            snowContainer.appendChild(s);
+        for (let i = 0; i < 100; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.textContent = ['❅', '❆', '❄', '✻', '✽', '✾'][Math.floor(Math.random() * 6)];
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 10 + 12 + 's';
+            snowflake.style.animationDelay = Math.random() * 20 + 's';
+            snowflake.style.fontSize = Math.random() * 12 + 14 + 'px';
+            snowflake.style.opacity = Math.random() * 0.5 + 0.4;
+            snowContainer.appendChild(snowflake);
         }
 
-        // КУРСОР
-        const cursor = document.querySelector('.cursor');
-        document.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-        document.querySelectorAll('.btn, .theme-toggle, .modal-btn, #nyBtn').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-        });
-
-        // ОТСЧЁТ ДО 2026
-        const countdownModal = document.getElementById('countdownModal');
+        // Отсчёт до Нового 2026 года
         const countdownTimer = document.getElementById('countdownTimer');
-        let timerInterval;
+
         function updateCountdown() {
             const now = new Date();
-            const newYear = new Date(now.getFullYear() + 1, 0, 1);
-            const diff = newYear - now;
+            const nextYear = now.getFullYear() + 1;
+            const newYearDate = new Date(nextYear, 0, 1, 0, 0, 0);
+            const diff = newYearDate - now;
+
             if (diff <= 0) {
-                countdownTimer.textContent = "С Новым 2026!";
-                clearInterval(timerInterval);
+                countdownTimer.textContent = "С Новым 2026 годом!";
                 return;
             }
-            const d = Math.floor(diff / 86400000);
-            const h = Math.floor((diff % 86400000) / 3600000);
-            const m = Math.floor((diff % 3600000) / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
-            countdownTimer.innerHTML = `${d.toString().padStart(2,'0')} : ${h.toString().padStart(2,'0')} : ${m.toString().padStart(2,'0')} : ${s.toString().padStart(2,'0')}`;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            countdownTimer.innerHTML = 
+                days.toString().padStart(2, '0') + " : " +
+                hours.toString().padStart(2, '0') + " : " +
+                minutes.toString().padStart(2, '0') + " : " +
+                seconds.toString().padStart(2, '0');
         }
-        document.getElementById('nyBtn').onclick = () => {
-            countdownModal.classList.add('show');
-            updateCountdown();
-            timerInterval = setInterval(updateCountdown, 1000);
-        };
-        document.getElementById('closeCountdown').onclick = () => {
-            countdownModal.classList.remove('show');
-            clearInterval(timerInterval);
-        };
-        countdownModal.onclick = e => {
-            if (e.target === countdownModal) {
-                countdownModal.classList.remove('show');
-                clearInterval(timerInterval);
-            }
-        };
 
-        // ПАЛИТРА И СМЕНА ЦВЕТА
-        const updateCSSVariables = (color) => {
-            const rgb = hexToRgb(color);
-            const darker = shadeColor(color, -30);
-            const rgba = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)`;
-            const rgbaShadow = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`;
-            const rgbaShadowEnd = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)`;
-            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-            const textColor = `hsl(${hsl[0]}, 70%, 85%)`;
-            document.documentElement.style.setProperty('--neon', color);
-            document.documentElement.style.setProperty('--neon-dark', darker);
-            document.documentElement.style.setProperty('--border-color', rgba);
-            document.documentElement.style.setProperty('--glow-pulse', `0 0 30px ${rgbaShadow}`);
-            document.documentElement.style.setProperty('--glow-pulse-end', `0 0 35px ${rgbaShadowEnd}`);
-            document.documentElement.style.setProperty('--btn-bg', `linear-gradient(135deg, ${darker}, ${color})`);
-            document.documentElement.style.setProperty('--btn-shadow', `0 6px 16px ${rgbaShadow}, 0 0 0 1px ${rgba}`);
-            document.documentElement.style.setProperty('--btn-hover-shadow', `0 20px 40px ${rgbaShadow.replace('0.2', '0.5')}, 0 0 0 2px ${color}`);
-            document.documentElement.style.setProperty('--text', textColor);
-        };
-        const hexToRgb = hex => /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) ? { r: parseInt(RegExp.$1, 16), g: parseInt(RegExp.$2, 16), b: parseInt(RegExp.$3, 16) } : null;
-        const shadeColor = (color, percent) => {
-            let [R, G, B] = [1,3,5].map(i => parseInt(color.slice(i, i+2), 16));
-            [R, G, B] = [R, G, B].map(c => Math.min(255, Math.round(c * (100 + percent) / 100)));
-            return `#${R.toString(16).padStart(2,'0')}${G.toString(16).padStart(2,'0')}${B.toString(16).padStart(2,'0')}`;
-        };
-        const rgbToHsl = (r,g,b) => { r/=255; g/=255; b/=255; const max=Math.max(r,g,b), min=Math.min(r,g,b); let h,s,l=(max+min)/2; if(max===min) h=s=0; else { const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min); switch(max){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;case b:h=(r-g)/d+4;break} h/=6; } return [h*360,s*100,l*100]; };
-        const hsvToRgb = (h,s,v) => { let r,g,b; const i=Math.floor(h*6); const f=h*6-i; const p=v*(1-s); const q=v*(1-f*s); const t=v*(1-(1-f)*s); switch(i%6){case 0:r=v,g=t,b=p;break;case 1:r=q,g=v,b=p;break;case 2:r=p,g=v,b=t;break;case 3:r=p,g=q,b=v;break;case 4:r=t,g=p,b=v;break;case 5:r=v,g=p,b=q;break} return {r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)}; };
-
-        const palette = document.getElementById('colorPalette');
-        const canvas = document.getElementById('paletteCanvas');
-        const ctx = canvas.getContext('2d');
-        const dot = document.getElementById('colorDot');
-        const toggleBtn = document.getElementById('themeToggle');
-        const body = document.body;
-        let isDragging = false;
-
-        const drawFullPalette = () => {
-            const w = canvas.width, h = canvas.height;
-            for (let x = 0; x < w; x++) for (let y = 0; y < h; y++) {
-                const hue = x / w * 360;
-                const sat = 1 - (y / h);
-                const rgb = hsvToRgb(hue/360, sat, 1);
-                ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
-                ctx.fillRect(x, y, 1, 1);
-            }
-        };
-        const getColorAt = (x,y) => {
-            const pixel = ctx.getImageData(x, y, 1, 1).data;
-            return `#${((pixel[0]<<16)+(pixel[1]<<8)+pixel[2]).toString(16).padStart(6,'0')}`;
-        };
-        drawFullPalette();
-
-        toggleBtn.addEventListener('click', e => {
-            e.stopPropagation();
-            const isOpen = palette.classList.toggle('show');
-            body.classList.toggle('blur', isOpen);
-            body.classList.toggle('show-blur', isOpen);
-            if (isOpen) { dot.style.left = '50%'; dot.style.top = '50%'; }
-            if (!isOpen) isDragging = false;
-        });
-
-        const updatePicker = e => {
-            const rect = canvas.getBoundingClientRect();
-            const x = Math.max(0, Math.min(rect.width-1, e.clientX - rect.left));
-            const y = Math.max(0, Math.min(rect.height-1, e.clientY - rect.top));
-            dot.style.left = `${x}px`;
-            dot.style.top = `${y}px`;
-            const color = getColorAt(Math.floor(x * (canvas.width / rect.width)), Math.floor(y * (canvas.height / rect.height)));
-            updateCSSVariables(color);
-        };
-        canvas.addEventListener('mousedown', e => { isDragging = true; updatePicker(e); });
-        document.addEventListener('mousemove', e => { if (isDragging) updatePicker(e); });
-        document.addEventListener('mouseup', () => { isDragging = false; });
-        canvas.addEventListener('click', updatePicker);
-
-        // ДОНАТЫ
-        const donateBtn = document.getElementById('donateBtn');
-        const donateModal = document.getElementById('donateModal');
-        const xrocketModal = document.getElementById('xrocketModal');
-        const closeDonate = document.getElementById('closeDonate');
-        const closeXRocket = document.getElementById('closeXRocket');
-        const openXRocket = document.getElementById('openXRocket');
-
-        donateBtn.addEventListener('click', () => donateModal.classList.add('show'));
-        closeDonate.addEventListener('click', () => donateModal.classList.remove('show'));
-        openXRocket.addEventListener('click', () => {
-            donateModal.classList.remove('show');
-            setTimeout(() => xrocketModal.classList.add('show'), 250);
-        });
-        closeXRocket.addEventListener('click', () => xrocketModal.classList.remove('show'));
-        window.addEventListener('click', e => {
-            if (e.target.classList.contains('modal')) {
-                donateModal.classList.remove('show');
-                xrocketModal.classList.remove('show');
-                countdownModal.classList.remove('show');
-                clearInterval(timerInterval);
-            }
-        });
+        // Обновляем сразу и каждую секунду
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>
