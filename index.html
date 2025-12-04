@@ -4,221 +4,357 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>devodrag</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
-            background: #ffffff;
-            color: #333333;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 60px 20px;
-            line-height: 1.8;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: left;
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            display: block;
-            margin: 0 auto 30px;
-            object-fit: cover;
-            border: 4px solid #333333;
-        }
-        h1 {
-            font-size: 3.2em;
-            text-align: center;
-            margin: 0 0 10px;
-            color: #000000;
-            font-weight: bold;
-        }
-        .subtitle {
-            text-align: center;
-            font-size: 1.4em;
-            color: #555555;
-            margin-bottom: 50px;
-            font-style: italic;
-        }
-        h2 {
-            font-size: 2.2em;
-            margin: 50px 0 20px;
-            color: #000000;
-            border-bottom: 2px solid #eeeeee;
-            padding-bottom: 10px;
-        }
-        h3 {
-            font-size: 1.8em;
-            margin: 40px 0 10px;
-            color: #000000;
-        }
-        ul {
-            list-style: none;
-            padding-left: 20px;
-            margin: 20px 0;
-        }
-        li {
-            margin: 12px 0;
-            font-size: 1.2em;
+            padding: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #2a0845, #4a148c, #6a1b9a);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e0e0e0;
+            overflow: hidden;
             position: relative;
         }
-        li:before {
-            content: "•";
-            color: #000000;
-            font-weight: bold;
-            position: absolute;
-            left: -20px;
-        }
-        strong {
-            color: #000000;
-        }
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .project {
-            margin-bottom: 40px;
-        }
-        .project p {
-            margin: 10px 0;
-            font-size: 1.1em;
-            color: #333333;
-        }
-        .separator {
-            border-bottom: 1px dashed #cccccc;
-            margin: 60px 0;
-        }
-        .contacts {
-            text-align: center;
-            margin: 50px 0;
-            font-size: 2.8em;
-        }
-        .contacts a {
-            margin: 0 30px;
-            color: #000000;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
-        .contacts a:hover {
-            transform: scale(1.3);
-            color: #0066cc;
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* Снежинки */
+        /* Снежинки - маленькие белые точки */
         .snow-container {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: -1;
+            z-index: 1;
         }
         .snowflake {
             position: absolute;
-            color: #dddddd;
-            font-size: 1.5em;
-            pointer-events: none;
-            user-select: none;
+            background: #ffffff;
+            border-radius: 50%;
+            width: 4px;
+            height: 4px;
+            opacity: 0.8;
             animation: fall linear infinite;
-            opacity: 0.7;
         }
         @keyframes fall {
-            0% { transform: translateY(-100vh) translateX(0) rotate(0deg); }
-            100% { transform: translateY(110vh) translateX(100px) rotate(720deg); }
+            0% {
+                transform: translateY(-100vh);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
         }
 
-        /* Отсчёт */
-        .countdown-section {
+        /* Новогодние гирлянды - цветные линии с лампочками */
+        .garland {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .garland-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: repeating-linear-gradient(to right, transparent 0, transparent 20px, #333 20px, #333 40px);
+            opacity: 0.6;
+        }
+        .garland-line::before, .garland-line::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px currentColor;
+        }
+        .garland-line:nth-child(1) { top: 10%; transform: rotate(3deg); }
+        .garland-line:nth-child(2) { top: 25%; transform: rotate(-2deg); }
+        .garland-line:nth-child(3) { top: 40%; transform: rotate(4deg); }
+        .garland-line:nth-child(4) { top: 55%; transform: rotate(-3deg); }
+        .garland-line:nth-child(5) { top: 70%; transform: rotate(2deg); }
+
+        .lights {
+            position: absolute;
+            top: -5px;
+            width: 100%;
+            height: 12px;
+        }
+        .light {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        .light:nth-child(odd) { background: #ff0000; box-shadow: 0 0 15px #ff0000; }
+        .light:nth-child(2n) { background: #00ff00; box-shadow: 0 0 15px #00ff00; animation-delay: 1s; }
+        .light:nth-child(3n) { background: #0000ff; box-shadow: 0 0 15px #0000ff; animation-delay: 2s; }
+        .light:nth-child(4n) { background: #ffff00; box-shadow: 0 0 15px #ffff00; animation-delay: 3s; }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Центральная карточка */
+        .card {
+            background: rgba(20, 20, 30, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px 30px;
+            max-width: 420px;
+            width: 90%;
             text-align: center;
-            margin: 80px 0;
-            padding: 40px;
-            background: #f9f9f9;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ffffff33;
+        }
+        .santa-hat {
+            position: absolute;
+            top: -25px;
+            right: -15px;
+            width: 60px;
+            height: 60px;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/9/96/Santa_Claus_hat.svg') no-repeat center/contain;
+            transform: rotate(15deg);
+        }
+        h1 {
+            font-size: 3em;
+            margin: 10px 0;
+            color: #bb86fc;
+            text-shadow: 0 0 15px #bb86fc66;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 40px 0 20px;
+            font-size: 1.4em;
+            color: #bb86fc;
+        }
+        .divider {
+            flex-grow: 1;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #bb86fc33, transparent);
+            margin: 0 15px;
+            position: relative;
+        }
+        .divider::before, .divider::after {
+            content: '🎄';
+            position: absolute;
+            font-size: 1.2em;
+        }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+
+        .tech-hobbies {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+        .column {
+            width: 48%;
+        }
+        .column h3 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        .column ul {
+            list-style: none;
+            padding: 0;
+        }
+        .column li {
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05em;
+        }
+        .column li i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .projects {
+            text-align: left;
+        }
+        .project {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ffffff11;
+        }
+        .project:last-child {
+            border-bottom: none;
+        }
+        .project h3 {
+            font-size: 1.3em;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        .project p {
+            opacity: 0.8;
+            margin: 8px 0;
+        }
+        .project-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .project-links a {
+            color: #bb86fc;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .contacts {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            font-size: 2em;
+        }
+        .contacts a {
+            color: #bb86fc;
+            transition: transform 0.3s;
+        }
+        .contacts a:hover {
+            transform: scale(1.3);
+        }
+
+        /* Отсчёт до 2026 */
+        .countdown-section {
+            margin-top: 50px;
+            padding: 20px;
+            background: rgba(187, 134, 252, 0.1);
+            border-radius: 16px;
         }
         .countdown-title {
-            font-size: 2.2em;
-            margin-bottom: 20px;
-            color: #000000;
+            font-size: 1.4em;
+            color: #bb86fc;
+            margin-bottom: 15px;
         }
         .countdown {
-            font-size: 3.5em;
+            font-size: 2.5em;
             font-weight: bold;
             letter-spacing: 5px;
-            color: #000000;
+            color: #ffffff;
         }
         .countdown-label {
-            font-size: 1.1em;
-            color: #555555;
+            font-size: 0.9em;
+            opacity: 0.8;
             margin-top: 10px;
         }
 
         @media (max-width: 600px) {
-            .container { padding: 20px; }
-            .avatar { width: 100px; height: 100px; }
-            h1 { font-size: 2.8em; }
-            .countdown { font-size: 2.5em; }
-            .contacts { font-size: 2.2em; }
+            .tech-hobbies {
+                flex-direction: column;
+            }
+            .column {
+                width: 100%;
+            }
+            .card {
+                padding: 30px 20px;
+            }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- Снежинки -->
+    <!-- Снежинки (маленькие точки) -->
     <div class="snow-container" id="snowflakes"></div>
 
-    <div class="container">
-        <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/120/333333/ffffff?text=devodrag'">
+    <!-- Гирлянды -->
+    <div class="garland" id="garlands"></div>
+
+    <!-- Центральная карточка -->
+    <div class="card">
+        <div class="avatar-container">
+            <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/120/6a1b9a/ffffff?text=D'">
+            <div class="santa-hat"></div>
+        </div>
 
         <h1>devodrag</h1>
         <p class="subtitle">Разработчик Telegram-ботов и скриптов</p>
 
-        <h2>Технологии</h2>
-        <ul>
-            <li><strong>Основные языки:</strong> Python, JavaScript, Lua</li>
-        </ul>
-
-        <h2>Хобби</h2>
-        <ul>
-            <li>💻 Кодинг</li>
-        </ul>
-
-        <h2>Проекты</h2>
-
-        <div class="project">
-            <h3>Frogy Price</h3>
-            <p>Курс криптовалюты каждые 5 минут</p>
-            <p><a href="https://t.me/pricesforcrypto" target="_blank">https://t.me/pricesforcrypto</a></p>
+        <div class="section-title">
+            <span><i class="fas fa-code"></i> Технологии</span>
+            <div class="divider"></div>
+            <span>Хобби <i class="fas fa-heart"></i></span>
         </div>
 
-        <div class="project">
-            <h3>CurrencyPrice</h3>
-            <p>Курс валют каждые 30 минут</p>
-            <p><a href="https://t.me/priceforcurrency" target="_blank">https://t.me/priceforcurrency</a></p>
+        <div class="tech-hobbies">
+            <div class="column">
+                <ul>
+                    <li><strong>Основной язык:</strong> Python</li>
+                    <li><strong>Другие языки:</strong> JavaScript, Lua</li>
+                </ul>
+            </div>
+            <div class="column">
+                <ul>
+                    <li><i class="fas fa-laptop-code"></i> Кодинг</li>
+                </ul>
+            </div>
         </div>
 
-        <div class="separator"></div>
+        <div class="section-title">
+            <span><i class="fas fa-folder-open"></i> Проекты</span>
+            <div class="divider"></div>
+        </div>
 
-        <h2>Связаться со мной</h2>
+        <div class="projects">
+            <div class="project">
+                <h3>Frogy Price</h3>
+                <p>Курс криптовалюты каждые 5 минут</p>
+                <div class="project-links">
+                    <a href="https://t.me/pricesforcrypto" target="_blank"><i class="fab fa-telegram-plane"></i> Канал</a>
+                </div>
+            </div>
+
+            <div class="project">
+                <h3>CurrencyPrice</h3>
+                <p>Курс валют каждые 30 минут</p>
+                <div class="project-links">
+                    <a href="https://t.me/priceforcurrency" target="_blank"><i class="fab fa-telegram-plane"></i> Канал</a>
+                </div>
+            </div>
+        </div>
+
         <div class="contacts">
             <a href="https://t.me/devodrag" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
             <a href="https://github.com/devodrag" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
             <a href="mailto:euesswekgpt@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
         </div>
 
-        <!-- Отсчёт до Нового года -->
         <div class="countdown-section">
             <div class="countdown-title">До 2026 года осталось</div>
             <div class="countdown" id="countdownTimer">00 : 00 : 00 : 00</div>
@@ -227,21 +363,39 @@
     </div>
 
     <script>
-        // Генерация снежинок
+        // Генерация снежинок (маленькие точки)
         const snowContainer = document.getElementById('snowflakes');
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 150; i++) {
             const snowflake = document.createElement('div');
             snowflake.className = 'snowflake';
-            snowflake.textContent = ['❅', '❆', '❄', '✻', '✽', '✾'][Math.floor(Math.random() * 6)];
             snowflake.style.left = Math.random() * 100 + 'vw';
-            snowflake.style.animationDuration = Math.random() * 10 + 12 + 's';
-            snowflake.style.animationDelay = Math.random() * 20 + 's';
-            snowflake.style.fontSize = Math.random() * 12 + 14 + 'px';
-            snowflake.style.opacity = Math.random() * 0.5 + 0.4;
+            snowflake.style.animationDuration = Math.random() * 10 + 10 + 's';
+            snowflake.style.animationDelay = Math.random() * 10 + 's';
+            snowflake.style.width = Math.random() * 3 + 2 + 'px';
+            snowflake.style.height = snowflake.style.width;
+            snowflake.style.opacity = Math.random() * 0.6 + 0.4;
             snowContainer.appendChild(snowflake);
         }
 
-        // Отсчёт до Нового 2026 года
+        // Генерация гирлянд
+        const garlandContainer = document.getElementById('garlands');
+        for (let i = 1; i <= 5; i++) {
+            const line = document.createElement('div');
+            line.className = 'garland-line';
+            const lights = document.createElement('div');
+            lights.className = 'lights';
+            for (let j = 0; j < 30; j++) {
+                const light = document.createElement('div');
+                light.className = 'light';
+                light.style.left = j * 3.33 + '%';
+                light.style.animationDelay = Math.random() * 4 + 's';
+                lights.appendChild(light);
+            }
+            line.appendChild(lights);
+            garlandContainer.appendChild(line);
+        }
+
+        // Отсчёт до 2026 года
         const countdownTimer = document.getElementById('countdownTimer');
 
         function updateCountdown() {
