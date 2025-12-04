@@ -20,36 +20,12 @@
             color: #e0e0e0;
             overflow-x: hidden;
             position: relative;
-            cursor: none;
+            /* Курсор убрали полностью */
         }
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
-        }
-
-        /* Оптимизированный новогодний курсор */
-        .cursor {
-            position: fixed;
-            width: 24px;
-            height: 24px;
-            pointer-events: none;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            transform: translate(-50%, -50%);
-        }
-        .cursor::before {
-            content: '✦';
-            position: absolute;
-            font-size: 20px;
-            color: #ff3366;
-            text-shadow: 0 0 15px #ff3366, 0 0 30px #ff6699;
-            animation: sparkle 1.5s infinite alternate;
-        }
-        @keyframes sparkle {
-            0% { opacity: 0.8; transform: scale(1) rotate(0deg); }
-            100% { opacity: 1; transform: scale(1.2) rotate(10deg); }
         }
 
         /* Снежинки */
@@ -114,7 +90,7 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* Мини-гирлянды между ёлками в разделителях */
+        /* Мини-гирлянды между ёлками */
         .divider {
             height: 40px;
             margin: 30px auto;
@@ -198,12 +174,23 @@
             margin-right: 10px;
         }
 
-        .tech-list, .hobbies-list {
+        /* Хобби по центру */
+        .hobbies-list {
+            text-align: center;
+            max-width: 380px;
+            margin: 0 auto 40px;
+        }
+        .hobbies-list li {
+            margin: 18px 0;
+            font-size: 1.15em;
+        }
+
+        .tech-list {
             text-align: left;
             max-width: 380px;
             margin: 0 auto 40px;
         }
-        .tech-list li, .hobbies-list li {
+        .tech-list li {
             margin: 18px 0;
             font-size: 1.15em;
             display: flex;
@@ -262,6 +249,31 @@
             transform: scale(1.4) rotate(10deg);
         }
 
+        /* Кнопки доната (как в оригинальном CATPON) */
+        .donate-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+        }
+        .donate-btn {
+            padding: 12px 24px;
+            background: rgba(187, 134, 252, 0.2);
+            border: 2px solid #bb86fc;
+            border-radius: 12px;
+            color: #bb86fc;
+            font-size: 1.1em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(187, 134, 252, 0.3);
+        }
+        .donate-btn:hover {
+            background: #bb86fc;
+            color: #121212;
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px #bb86fc;
+        }
+
         .countdown-section {
             margin: 120px auto 60px;
             padding: 40px;
@@ -297,13 +309,11 @@
             h1 { font-size: 2.8em; }
             .countdown { font-size: 2.4em; }
             .contacts { font-size: 2em; gap: 30px; }
+            .donate-buttons { flex-direction: column; align-items: center; }
         }
     </style>
 </head>
 <body>
-
-    <!-- Кастомный курсор -->
-    <div class="cursor" id="cursor"></div>
 
     <!-- Снежинки -->
     <div class="snow-container" id="snowflakes"></div>
@@ -349,6 +359,13 @@
             </div>
         </div>
 
+        <!-- Кнопки доната -->
+        <div class="donate-buttons">
+            <a href="#" class="donate-btn">DonationAlerts</a>
+            <a href="#" class="donate-btn">Boosty</a>
+            <a href="#" class="donate-btn">Crypto</a>
+        </div>
+
         <div class="contacts">
             <a href="https://t.me/devodrag" target="_blank"><i class="fab fa-telegram-plane"></i></a>
             <a href="https://github.com/devodrag" target="_blank"><i class="fab fa-github"></i></a>
@@ -364,27 +381,6 @@
     </div>
 
     <script>
-        // Плавный курсор
-        const cursor = document.getElementById('cursor');
-        let mouseX = 0;
-        let mouseY = 0;
-        let cursorX = 0;
-        let cursorY = 0;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-
-        function animateCursor() {
-            cursorX += (mouseX - cursorX) * 0.1;
-            cursorY += (mouseY - cursorY) * 0.1;
-            cursor.style.left = cursorX + 'px';
-            cursor.style.top = cursorY + 'px';
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
-
         // Снежинки
         const snowContainer = document.getElementById('snowflakes');
         for (let i = 0; i < 180; i++) {
