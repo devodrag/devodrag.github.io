@@ -28,7 +28,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Оптимизированный новогодний курсор — плавный, без лагов */
+        /* Оптимизированный новогодний курсор */
         .cursor {
             position: fixed;
             width: 24px;
@@ -116,9 +116,8 @@
 
         /* Мини-гирлянды между ёлками в разделителях */
         .divider {
-            height: 3px;
-            background: transparent;
-            margin: 20px auto;
+            height: 40px;
+            margin: 30px auto;
             width: 80%;
             position: relative;
             display: flex;
@@ -127,11 +126,11 @@
         }
         .divider::before, .divider::after {
             content: '🎄';
-            font-size: 1.6em;
+            font-size: 1.8em;
             position: relative;
         }
         .mini-garland {
-            width: 60%;
+            flex-grow: 1;
             height: 4px;
             background: repeating-linear-gradient(to right, transparent 0, transparent 15px, #444 15px, #444 30px);
             margin: 0 20px;
@@ -140,6 +139,7 @@
         .mini-lights {
             position: absolute;
             top: -8px;
+            left: 0;
             width: 100%;
             height: 20px;
         }
@@ -299,5 +299,165 @@
             .contacts { font-size: 2em; gap: 30px; }
         }
     </style>
+</head>
+<body>
+
+    <!-- Кастомный курсор -->
+    <div class="cursor" id="cursor"></div>
+
+    <!-- Снежинки -->
+    <div class="snow-container" id="snowflakes"></div>
+
+    <!-- Гирлянды на фоне -->
+    <div class="garland" id="garlands"></div>
+
+    <!-- Основная карточка -->
+    <div class="card">
+        <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/130/6a1b9a/ffffff?text=D'">
+
+        <h1>devodrag</h1>
+        <p class="subtitle">Разработчик Telegram-ботов и скриптов</p>
+
+        <div class="section-title"><i class="fas fa-code"></i> Технологии</div>
+        <div class="divider" id="tech-divider"></div>
+        <div class="tech-list">
+            <ul>
+                <li><strong>Основные языки:</strong> Python, JavaScript, Lua</li>
+            </ul>
+        </div>
+
+        <div class="section-title">Хобби <i class="fas fa-heart"></i></div>
+        <div class="divider" id="hobbies-divider"></div>
+        <div class="hobbies-list">
+            <ul>
+                <li><i class="fas fa-laptop-code"></i> Кодинг</li>
+            </ul>
+        </div>
+
+        <div class="section-title"><i class="fas fa-folder-open"></i> Проекты</div>
+        <div class="divider" id="projects-divider"></div>
+        <div class="projects">
+            <div class="project">
+                <h3>Frogy Price</h3>
+                <p>Курс криптовалюты каждые 5 минут</p>
+                <p><a href="https://t.me/pricesforcrypto" target="_blank"><i class="fab fa-telegram-plane"></i> https://t.me/pricesforcrypto</a></p>
+            </div>
+            <div class="project">
+                <h3>CurrencyPrice</h3>
+                <p>Курс валют каждые 30 минут</p>
+                <p><a href="https://t.me/priceforcurrency" target="_blank"><i class="fab fa-telegram-plane"></i> https://t.me/priceforcurrency</a></p>
+            </div>
+        </div>
+
+        <div class="contacts">
+            <a href="https://t.me/devodrag" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+            <a href="https://github.com/devodrag" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="mailto:euesswekgpt@gmail.com"><i class="fas fa-envelope"></i></a>
+        </div>
+    </div>
+
+    <!-- Отсчёт до Нового года -->
+    <div class="countdown-section">
+        <div class="countdown-title">До 2026 года осталось</div>
+        <div class="countdown" id="countdownTimer">00 : 00 : 00 : 00</div>
+        <div class="countdown-label">дней  часов  минут  секунд</div>
+    </div>
+
+    <script>
+        // Плавный курсор
+        const cursor = document.getElementById('cursor');
+        let mouseX = 0;
+        let mouseY = 0;
+        let cursorX = 0;
+        let cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.1;
+            cursorY += (mouseY - cursorY) * 0.1;
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Снежинки
+        const snowContainer = document.getElementById('snowflakes');
+        for (let i = 0; i < 180; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 12 + 12 + 's';
+            snowflake.style.animationDelay = Math.random() * 10 + 's';
+            snowflake.style.width = Math.random() * 4 + 2 + 'px';
+            snowflake.style.height = snowflake.style.width;
+            snowContainer.appendChild(snowflake);
+        }
+
+        // Гирлянды на фоне
+        const garlandContainer = document.getElementById('garlands');
+        const positions = ['10%', '28%', '46%', '64%', '82%'];
+        positions.forEach((top, index) => {
+            const line = document.createElement('div');
+            line.className = 'garland-line';
+            line.style.top = top;
+            line.style.transform = `rotate(${index % 2 === 0 ? '' : '-'}4deg)`;
+            const lights = document.createElement('div');
+            lights.className = 'lights';
+            for (let j = 0; j < 32; j++) {
+                const light = document.createElement('div');
+                light.className = 'light';
+                light.style.left = j * (100 / 32) + '%';
+                light.style.animationDelay = Math.random() * 3 + 's';
+                lights.appendChild(light);
+            }
+            line.appendChild(lights);
+            garlandContainer.appendChild(line);
+        });
+
+        // Мини-гирлянды в разделителях
+        function createMiniGarland(containerId) {
+            const container = document.getElementById(containerId);
+            const miniGarland = document.createElement('div');
+            miniGarland.className = 'mini-garland';
+            const miniLights = document.createElement('div');
+            miniLights.className = 'mini-lights';
+            for (let j = 0; j < 15; j++) {
+                const light = document.createElement('div');
+                light.className = 'mini-light';
+                light.style.left = j * (100 / 15) + '%';
+                light.style.animationDelay = Math.random() * 2.5 + 's';
+                miniLights.appendChild(light);
+            }
+            miniGarland.appendChild(miniLights);
+            container.appendChild(miniGarland);
+        }
+        createMiniGarland('tech-divider');
+        createMiniGarland('hobbies-divider');
+        createMiniGarland('projects-divider');
+
+        // Отсчёт до 2026
+        const countdownTimer = document.getElementById('countdownTimer');
+        function updateCountdown() {
+            const now = new Date();
+            const newYear = new Date(now.getFullYear() + 1, 0, 1);
+            const diff = newYear - now;
+            if (diff <= 0) {
+                countdownTimer.textContent = "С Новым 2026!";
+                return;
+            }
+            const days = Math.floor(diff / 86400000);
+            const hours = Math.floor((diff % 86400000) / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            countdownTimer.innerHTML = `${days.toString().padStart(2,'0')} : ${hours.toString().padStart(2,'0')} : ${minutes.toString().padStart(2,'0')} : ${seconds.toString().padStart(2,'0')}`;
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
 </body>
 </html>
