@@ -124,7 +124,7 @@
             animation-delay: 0.5s;
         }
 
-        /* КНОПКИ С ГЛУБОКИМ 3D */
+        /* КНОПКИ С АККУРАТНЫМ 3D */
         .ios-btn {
             position: relative;
             display: flex;
@@ -145,13 +145,13 @@
             transform-style: preserve-3d;
             transform: perspective(800px) rotateX(0deg) rotateY(0deg);
             
-            /* ВАЖНО: Анимируем ТОЛЬКО цвета и тени по дефолту, никакой плавности для transform во время ховера! */
+            /* Анимируем ТОЛЬКО цвета и тени при ховере */
             transition: background-color 0.25s, border-color 0.25s, box-shadow 0.25s;
         }
 
-        /* Эффект вылета текста и иконок вперед (Параллакс) */
+        /* Эффект легкой многослойности (Параллакс) */
         .ios-btn .left-side, .ios-btn .fa-chevron-right {
-            transform: translateZ(35px); /* Контент сильно выносится вперед */
+            transform: translateZ(15px); /* Аккуратный объем без сильного отрыва */
             backface-visibility: hidden;
         }
 
@@ -159,34 +159,34 @@
         .ios-btn i { font-size: 1.3em; }
         .ios-btn .fa-chevron-right { font-size: 0.85em; opacity: 0.4; }
 
-        /* --- МОЩНЕЙШАЯ ПОДСВЕТКА И НЕОН ПРИ НАВЕДЕНИИ --- */
+        /* --- НЕОНОВАЯ ПОДСВЕТКА НАВЕДЕНИЯ --- */
         
-        /* Telegram: Ультра-синее неоновое сияние */
+        /* Telegram */
         .ios-btn-tg:hover {
             background: rgba(0, 136, 204, 0.3);
             border-color: rgba(0, 136, 204, 0.9);
             box-shadow: 
-                0 0 25px rgba(0, 136, 204, 0.5), 
-                0 15px 45px rgba(0, 136, 204, 0.4),
-                inset 0 0 15px rgba(0, 136, 204, 0.4);
+                0 0 25px rgba(0, 136, 204, 0.4), 
+                0 10px 35px rgba(0, 136, 204, 0.3),
+                inset 0 0 15px rgba(0, 136, 204, 0.3);
         }
         .ios-btn-tg:hover .fa-telegram {
             color: #33b5e5;
-            filter: drop-shadow(0 0 10px #0088cc);
+            filter: drop-shadow(0 0 8px #0088cc);
         }
 
-        /* GitHub: Огненный янтарно-золотой взрыв */
+        /* GitHub */
         .ios-btn-gh:hover {
             background: rgba(255, 204, 51, 0.2);
             border-color: rgba(255, 204, 51, 0.9);
             box-shadow: 
-                0 0 25px rgba(255, 204, 51, 0.4), 
-                0 15px 45px rgba(255, 204, 51, 0.3),
-                inset 0 0 15px rgba(255, 204, 51, 0.3);
+                0 0 25px rgba(255, 204, 51, 0.3), 
+                0 10px 35px rgba(255, 204, 51, 0.25),
+                inset 0 0 15px rgba(255, 204, 51, 0.2);
         }
         .ios-btn-gh:hover .fa-github {
             color: var(--accent-yellow);
-            filter: drop-shadow(0 0 10px var(--accent-yellow));
+            filter: drop-shadow(0 0 8px var(--accent-yellow));
         }
 
         .sunlight {
@@ -256,41 +256,34 @@
             particleContainer.appendChild(particle);
         }
 
-        // 2. БЕЗЛАГОВЫЙ И ЖЕСТКИЙ 3D TILT ЭФФЕКТ
+        // 2. Сбалансированный 3D TILT ЭФФЕКТ
         const buttons = document.querySelectorAll('.tilt-btn');
 
         buttons.forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
                 const rect = btn.getBoundingClientRect();
                 
-                // Координаты мыши строго внутри кнопки
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 
-                // Центр кнопки
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
                 
-                // Процентное отклонение от центра (-1 до 1)
                 const deltaX = (x - centerX) / centerX;
                 const deltaY = (y - centerY) / centerY;
                 
-                // УГОЛ НАКЛОНА (35 градусов — теперь точно заметишь!)
-                const maxTilt = 35;
+                // ИДЕАЛЬНЫЙ БАЛАНС: 15 градусов наклона
+                const maxTilt = 15;
                 
                 const rotateX = -(deltaY * maxTilt).toFixed(2);
                 const rotateY = (deltaX * maxTilt).toFixed(2);
                 
-                // КРИТИЧЕСКИ ВАЖНО: Убираем любые плавности во время движения мыши, чтобы не было лага и гашения
                 btn.style.transition = 'none';
-                
-                // Применяем вращение + небольшой зум на тебя
-                btn.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+                btn.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
             });
 
-            // Когда мышь уходит — плавно возвращаем в исходку с пружиной
             btn.addEventListener('mouseleave', () => {
-                btn.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s, border-color 0.3s, box-shadow 0.3s';
+                btn.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s, border-color 0.3s, box-shadow 0.3s';
                 btn.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)';
             });
         });
