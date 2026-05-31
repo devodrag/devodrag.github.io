@@ -37,6 +37,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            perspective: 1000px; /* Включаем 3D-пространство для всей страницы */
         }
 
         /* Анимированный летний бэкграунд (Liquid Blobs) */
@@ -60,34 +61,9 @@
             animation: moveBlob 25s ease-in-out infinite alternate;
         }
 
-        .blob:nth-child(1) {
-            width: 500px;
-            height: 500px;
-            top: -10%;
-            left: -10%;
-            background: linear-gradient(135deg, #ff8c00, #e52d27);
-            animation-duration: 20s;
-        }
-
-        .blob:nth-child(2) {
-            width: 450px;
-            height: 450px;
-            bottom: -10%;
-            right: -5%;
-            background: linear-gradient(135deg, #ffcc33, #ffb347);
-            animation-duration: 28s;
-            animation-delay: -5s;
-        }
-
-        .blob:nth-child(3) {
-            width: 300px;
-            height: 300px;
-            top: 40%;
-            left: 50%;
-            background: linear-gradient(135deg, #ff512f, #dd2476);
-            animation-duration: 22s;
-            animation-delay: -10s;
-        }
+        .blob:nth-child(1) { width: 500px; height: 500px; top: -10%; left: -10%; background: linear-gradient(135deg, #ff8c00, #e52d27); animation-duration: 20s; }
+        .blob:nth-child(2) { width: 450px; height: 450px; bottom: -10%; right: -5%; background: linear-gradient(135deg, #ffcc33, #ffb347); animation-duration: 28s; animation-delay: -5s; }
+        .blob:nth-child(3) { width: 300px; height: 300px; top: 40%; left: 50%; background: linear-gradient(135deg, #ff512f, #dd2476); animation-duration: 22s; animation-delay: -10s; }
 
         @keyframes moveBlob {
             0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
@@ -99,10 +75,7 @@
         /* Солнечные частицы на фоне */
         .particle-container {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
             z-index: 2;
         }
@@ -137,6 +110,7 @@
                 inset 0 1px 2px rgba(255, 255, 255, 0.2),
                 inset 0 -1px 20px rgba(255, 255, 255, 0.05);
             text-align: center;
+            transform-style: preserve-3d; /* Позволяет дочерним элементам двигаться в 3D */
         }
 
         /* Общая анимация появления элементов */
@@ -151,24 +125,8 @@
         }
 
         /* Аватарка с жидким свечением */
-        .avatar-holder {
-            position: relative;
-            width: 110px;
-            height: 110px;
-            margin: 0 auto 20px;
-            animation-delay: 0.1s;
-        }
-
-        .avatar {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            position: relative;
-            z-index: 2;
-        }
-
+        .avatar-holder { position: relative; width: 110px; height: 110px; margin: 0 auto 20px; animation-delay: 0.1s; }
+        .avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.4); position: relative; z-index: 2; }
         .avatar-glow {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -185,10 +143,10 @@
             100% { transform: scale(1.1); opacity: 0.8; }
         }
 
-        /* Жирные шрифты по канону Apple */
+        /* Шрифты */
         h1 {
             font-size: 2.4em;
-            font-weight: 800; /* Максимально жирный акцентный заголовок */
+            font-weight: 800;
             letter-spacing: -0.8px;
             margin-bottom: 4px;
             background: linear-gradient(180deg, #ffffff 0%, #ffe5b4 100%);
@@ -197,35 +155,19 @@
             animation-delay: 0.3s;
         }
 
-        .tagline {
-            font-size: 1.1em;
-            color: var(--accent-yellow);
-            font-weight: 700; /* Плотный Bold подзаголовок */
-            margin-bottom: 6px;
-            letter-spacing: -0.2px;
-            animation-delay: 0.4s;
-        }
+        .tagline { font-size: 1.1em; color: var(--accent-yellow); font-weight: 700; margin-bottom: 6px; letter-spacing: -0.2px; animation-delay: 0.4s; }
+        .location { font-size: 0.95em; color: var(--text-sub); font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 30px; animation-delay: 0.5s; }
 
-        .location {
-            font-size: 0.95em;
-            color: var(--text-sub);
-            font-weight: 600; /* Полужирный для локации */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-bottom: 30px;
-            animation-delay: 0.5s;
-        }
-
-        /* Кнопки в стиле iOS Liquid Glass */
+        /* Контейнер кнопок */
         .links-container {
             display: flex;
             flex-direction: column;
             gap: 14px;
             animation-delay: 0.6s;
+            transform-style: preserve-3d;
         }
 
+        /* Кнопки в стиле iOS с поддержкой 3D */
         .ios-btn {
             display: flex;
             align-items: center;
@@ -237,74 +179,51 @@
             color: var(--text-main);
             text-decoration: none;
             font-size: 1.1em;
-            font-weight: 700; /* Делаем текст кнопок отчетливо жирным */
+            font-weight: 700;
             letter-spacing: -0.3px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             backdrop-filter: blur(10px);
+            
+            /* Важно для 3D */
+            transform-style: preserve-3d;
+            transform: perspective(500px) rotateX(0deg) rotateY(0deg);
+            transition: transform 0.1s ease, background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        /* Чтобы иконки приподнимались над кнопкой в 3D слое */
+        .ios-btn .left-side, .ios-btn .fa-chevron-right {
+            transform: translateZ(15px); /* Создает эффект многослойности */
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .ios-btn .left-side {
             display: flex;
             align-items: center;
             gap: 14px;
-            transition: transform 0.3s ease;
         }
 
-        .ios-btn i {
-            font-size: 1.25em;
-            transition: all 0.3s ease;
-        }
+        .ios-btn i { font-size: 1.25em; transition: color 0.3s; }
+        .ios-btn .fa-chevron-right { font-size: 0.85em; opacity: 0.4; }
 
-        .ios-btn .fa-chevron-right {
-            font-size: 0.85em;
-            opacity: 0.4;
-            transition: all 0.3s ease;
-        }
-
-        /* Ховеры */
+        /* Стили ховеров */
         .ios-btn-tg:hover {
-            background: rgba(0, 136, 204, 0.15);
-            border-color: rgba(0, 136, 204, 0.4);
-            box-shadow: 0 10px 25px rgba(0, 136, 204, 0.2);
-            transform: translateY(-2px);
+            background: rgba(0, 136, 204, 0.12);
+            border-color: rgba(0, 136, 204, 0.35);
+            box-shadow: 0 15px 30px rgba(0, 136, 204, 0.15);
         }
-        .ios-btn-tg:hover .fa-telegram {
-            color: #24A1DE;
-            transform: scale(1.1);
-        }
+        .ios-btn-tg:hover .fa-telegram { color: #24A1DE; }
 
         .ios-btn-gh:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-        .ios-btn-gh:hover .fa-github {
-            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.05);
         }
 
-        .ios-btn:hover .left-side {
-            transform: translateX(3px);
-        }
-        .ios-btn:hover .fa-chevron-right {
-            transform: translateX(-3px);
-            opacity: 0.8;
-        }
-
-        .ios-btn:active {
-            transform: scale(0.98) translateY(0);
-        }
-
-        /* Солнечные лучи */
+        /* Лучи солнца */
         .sunlight {
             position: absolute;
-            top: -20%;
-            right: -20%;
-            width: 60vw;
-            height: 60vw;
+            top: -20%; right: -20%; width: 60vw; height: 60vw;
             background: radial-gradient(circle, rgba(255,204,51,0.15) 0%, transparent 70%);
-            z-index: 2;
-            pointer-events: none;
+            z-index: 2; pointer-events: none;
         }
     </style>
 </head>
@@ -337,9 +256,9 @@
             <span>Latvia</span>
         </div>
 
-        <!-- Кнопки-ссылки -->
+        <!-- Кнопки-ссылки с 3D Tilt эффектом -->
         <div class="links-container element-appear">
-            <a href="https://t.me/swiftlose" target="_blank" class="ios-btn ios-btn-tg">
+            <a href="https://t.me/swiftlose" target="_blank" class="ios-btn ios-btn-tg 3d-tilt">
                 <div class="left-side">
                     <i class="fab fa-telegram"></i>
                     <span>Telegram</span>
@@ -347,7 +266,7 @@
                 <i class="fas fa-chevron-right"></i>
             </a>
 
-            <a href="https://github.com/devodrag" target="_blank" class="ios-btn ios-btn-gh">
+            <a href="https://github.com/devodrag" target="_blank" class="ios-btn ios-btn-gh 3d-tilt">
                 <div class="left-side">
                     <i class="fab fa-github"></i>
                     <span>GitHub</span>
@@ -358,23 +277,62 @@
     </div>
 
     <script>
-        // Генерируем солнечные частицы на фоне
+        // 1. Генерируем солнечные частицы
         const particleContainer = document.getElementById('particles');
         const particleCount = 50;
 
         for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
             particle.className = 'particle';
-            
             const size = Math.random() * 5 + 2 + 'px';
             particle.style.width = size;
             particle.style.height = size;
             particle.style.left = Math.random() * 100 + 'vw';
             particle.style.animationDuration = Math.random() * 10 + 5 + 's';
             particle.style.animationDelay = Math.random() * 10 + 's';
-            
             particleContainer.appendChild(particle);
         }
+
+        // 2. Умный 3D-Tilt эффект для кнопок
+        const tiltButtons = document.querySelectorAll('.3d-tilt');
+
+        tiltButtons.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                
+                // Координаты курсора относительно центра кнопки
+                const x = e.clientX - rect.left; 
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Вычисляем отклонение (-1 до 1)
+                const deltaX = (x - centerX) / centerX;
+                const deltaY = (y - centerY) / centerY;
+                
+                // Максимальный угол наклона (в градусах)
+                const maxTilt = 12; 
+                
+                // Рассчитываем повороты (разворот по X зависит от движения по Y, и наоборот)
+                const rotateX = -(deltaY * maxTilt).toFixed(2);
+                const rotateY = (deltaX * maxTilt).toFixed(2);
+                
+                // Применяем 3D-трансформацию с небольшим вдавливанием (scale)
+                btn.style.transform = `perspective(500px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(0.97)`;
+            });
+
+            // Возвращаем кнопку в исходное состояние, когда курсор уходит
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+                btn.style.transform = 'perspective(500px) rotateX(0deg) rotateY(0deg) scale(1)';
+            });
+
+            // Убираем задержку анимации во время движения, чтобы не лагало
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transition = 'background-color 0.3s, border-color 0.3s, box-shadow 0.3s';
+            });
+        });
     </script>
 
 </body>
