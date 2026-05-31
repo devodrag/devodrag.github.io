@@ -4,450 +4,378 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>devodrag</title>
+    <!-- Подключаем оригинальный шрифт Apple San Francisco (SF Pro Display) -->
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <!-- Подключаем актуальные иконки FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        html {
-            scroll-behavior: smooth;
-        }
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 200vh;
-            background: linear-gradient(135deg, #2a0845, #4a148c, #6a1b9a);
-            background-size: 400% 400%;
-            animation: gradientShift 20s ease infinite;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #e0e0e0;
-            overflow-x: hidden;
-            position: relative;
-            /* Курсор убрали полностью */
-        }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        :root {
+            --bg-gradient: linear-gradient(135deg, #ff7e5f, #feb47b, #ffcc33);
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: rgba(254, 180, 123, 0.15);
+            --text-main: #ffffff;
+            --text-sub: rgba(255, 255, 255, 0.7);
+            --accent-yellow: #ffcc33;
+            --particle-color: rgba(255, 204, 51, 0.3);
         }
 
-        /* Снежинки */
-        .snow-container {
-            position: fixed;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Строго без скролла */
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #110905;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Анимированный летний бэкграунд (Liquid Blobs) */
+        .background-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            filter: blur(80px);
+            background: radial-gradient(circle at 50% 50%, #200b00, #0c0502);
+        }
+
+        .blob {
+            position: absolute;
+            background: linear-gradient(45deg, #ff4e50, #f9d423);
+            border-radius: 50%;
+            mix-blend-mode: screen;
+            opacity: 0.5;
+            animation: moveBlob 25s ease-in-out infinite alternate;
+        }
+
+        .blob:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            top: -10%;
+            left: -10%;
+            background: linear-gradient(135deg, #ff8c00, #e52d27);
+            animation-duration: 20s;
+        }
+
+        .blob:nth-child(2) {
+            width: 450px;
+            height: 450px;
+            bottom: -10%;
+            right: -5%;
+            background: linear-gradient(135deg, #ffcc33, #ffb347);
+            animation-duration: 28s;
+            animation-delay: -5s;
+        }
+
+        .blob:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            top: 40%;
+            left: 50%;
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            animation-duration: 22s;
+            animation-delay: -10s;
+        }
+
+        @keyframes moveBlob {
+            0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+            33% { transform: translate(100px, -80px) scale(1.2) rotate(120deg); }
+            66% { transform: translate(-60px, 60px) scale(0.8) rotate(240deg); }
+            100% { transform: translate(0px, 0px) scale(1) rotate(360deg); }
+        }
+
+        /* Солнечные частицы на фоне */
+        .particle-container {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1;
-        }
-        .snowflake {
-            position: absolute;
-            background: #ffffff;
-            border-radius: 50%;
-            width: 4px;
-            height: 4px;
-            opacity: 0.8;
-            animation: fall linear infinite;
-        }
-        @keyframes fall {
-            0% { transform: translateY(-100vh); }
-            100% { transform: translateY(100vh); }
-        }
-
-        /* Гирлянды на фоне */
-        .garland {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
             z-index: 2;
         }
-        .garland-line {
+        .particle {
             position: absolute;
-            width: 110%;
-            left: -5%;
-            height: 4px;
-            background: repeating-linear-gradient(to right, #333 0, #333 30px, transparent 30px, transparent 60px);
-            opacity: 0.7;
-        }
-        .lights {
-            position: absolute;
-            top: -10px;
-            width: 100%;
-            height: 24px;
-        }
-        .light {
-            position: absolute;
-            width: 16px;
-            height: 16px;
+            background: var(--particle-color);
             border-radius: 50%;
-            animation: twinkle 3s infinite;
+            filter: blur(1px);
+            animation: floatParticle linear infinite;
         }
-        .light:nth-child(4n+1) { background: #ff0000; box-shadow: 0 0 20px #ff0000; }
-        .light:nth-child(4n+2) { background: #00ff00; box-shadow: 0 0 20px #00ff00; animation-delay: 0.5s; }
-        .light:nth-child(4n+3) { background: #0000ff; box-shadow: 0 0 20px #0000ff; animation-delay: 1s; }
-        .light:nth-child(4n+4) { background: #ffff00; box-shadow: 0 0 20px #ffff00; animation-delay: 1.5s; }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.7; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
         }
 
-        /* Мини-гирлянды между ёлками */
-        .divider {
-            height: 40px;
-            margin: 30px auto;
-            width: 80%;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .divider::before, .divider::after {
-            content: '🎄';
-            font-size: 1.8em;
-            position: relative;
-        }
-        .mini-garland {
-            flex-grow: 1;
-            height: 4px;
-            background: repeating-linear-gradient(to right, transparent 0, transparent 15px, #444 15px, #444 30px);
-            margin: 0 20px;
-            position: relative;
-        }
-        .mini-lights {
-            position: absolute;
-            top: -8px;
-            left: 0;
-            width: 100%;
-            height: 20px;
-        }
-        .mini-light {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            animation: twinkle 2.5s infinite;
-        }
-        .mini-light:nth-child(4n+1) { background: #ff0000; box-shadow: 0 0 12px #ff0000; }
-        .mini-light:nth-child(4n+2) { background: #00ff00; box-shadow: 0 0 12px #00ff00; animation-delay: 0.4s; }
-        .mini-light:nth-child(4n+3) { background: #0000ff; box-shadow: 0 0 12px #0000ff; animation-delay: 0.8s; }
-        .mini-light:nth-child(4n+4) { background: #ffff00; box-shadow: 0 0 12px #ffff00; animation-delay: 1.2s; }
-
-        /* Карточка */
-        .card {
-            background: rgba(20, 20, 30, 0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 50px 35px;
-            max-width: 460px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        /* Главный контейнер iOS 26 Liquid Glass */
+        .glass-wrapper {
             position: relative;
             z-index: 10;
-            margin: 10vh auto 5vh;
+            width: 90%;
+            max-width: 420px;
+            padding: 35px 25px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 38px;
+            backdrop-filter: blur(30px) saturate(210%);
+            -webkit-backdrop-filter: blur(30px) saturate(210%);
+            box-shadow: 
+                0 4px 30px rgba(0, 0, 0, 0.4),
+                inset 0 1px 2px rgba(255, 255, 255, 0.2),
+                inset 0 -1px 20px rgba(255, 255, 255, 0.05);
+            text-align: center;
         }
+
+        /* Общая анимация появления элементов */
+        .element-appear {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            animation: cardAppear 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes cardAppear {
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Аватарка с жидким свечением */
+        .avatar-holder {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 20px;
+            animation-delay: 0.1s;
+        }
+
         .avatar {
-            width: 130px;
-            height: 130px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid #bb86fc44;
-            margin-bottom: 20px;
-            box-shadow: 0 0 30px #bb86fc66;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            position: relative;
+            z-index: 2;
         }
+
+        .avatar-glow {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #ffcc33, #ff4e50);
+            border-radius: 50%;
+            filter: blur(15px);
+            opacity: 0.6;
+            z-index: 1;
+            animation: pulseGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            100% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* Жирные шрифты по канону Apple */
         h1 {
-            font-size: 3.2em;
-            margin: 15px 0;
-            color: #bb86fc;
-            text-shadow: 0 0 20px #bb86fc88;
-        }
-        .subtitle {
-            font-size: 1.2em;
-            opacity: 0.9;
-            margin-bottom: 50px;
-        }
-        .section-title {
-            font-size: 1.6em;
-            color: #bb86fc;
-            margin: 50px 0 25px;
-        }
-        .section-title i {
-            margin-right: 10px;
+            font-size: 2.4em;
+            font-weight: 800; /* Максимально жирный акцентный заголовок */
+            letter-spacing: -0.8px;
+            margin-bottom: 4px;
+            background: linear-gradient(180deg, #ffffff 0%, #ffe5b4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation-delay: 0.3s;
         }
 
-        /* Хобби по центру */
-        .hobbies-list {
-            text-align: center;
-            max-width: 380px;
-            margin: 0 auto 40px;
-        }
-        .hobbies-list li {
-            margin: 18px 0;
-            font-size: 1.15em;
+        .tagline {
+            font-size: 1.1em;
+            color: var(--accent-yellow);
+            font-weight: 700; /* Плотный Bold подзаголовок */
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+            animation-delay: 0.4s;
         }
 
-        .tech-list {
-            text-align: left;
-            max-width: 380px;
-            margin: 0 auto 40px;
-        }
-        .tech-list li {
-            margin: 18px 0;
-            font-size: 1.15em;
+        .location {
+            font-size: 0.95em;
+            color: var(--text-sub);
+            font-weight: 600; /* Полужирный для локации */
             display: flex;
             align-items: center;
-            gap: 12px;
-        }
-        .tech-list strong {
-            color: #ffffff;
-        }
-
-        .projects {
-            text-align: left;
-            max-width: 380px;
-            margin: 0 auto;
-        }
-        .project {
-            margin-bottom: 35px;
-            padding-bottom: 25px;
-            border-bottom: 1px dashed #ffffff22;
-        }
-        .project:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
-        }
-        .project h3 {
-            font-size: 1.4em;
-            color: #bb86fc;
-            margin-bottom: 10px;
-        }
-        .project p {
-            opacity: 0.85;
-            margin: 10px 0;
-        }
-        .project a {
-            color: #bb86fc;
-            text-decoration: none;
-            font-size: 1.05em;
-        }
-        .project a:hover {
-            text-decoration: underline;
-        }
-
-        .contacts {
-            display: flex;
             justify-content: center;
-            gap: 40px;
-            margin: 50px 0;
-            font-size: 2.4em;
+            gap: 6px;
+            margin-bottom: 30px;
+            animation-delay: 0.5s;
         }
-        .contacts a {
-            color: #bb86fc;
+
+        /* Кнопки в стиле iOS Liquid Glass */
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            animation-delay: 0.6s;
+        }
+
+        .ios-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 700; /* Делаем текст кнопок отчетливо жирным */
+            letter-spacing: -0.3px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .ios-btn .left-side {
+            display: flex;
+            align-items: center;
+            gap: 14px;
             transition: transform 0.3s ease;
         }
-        .contacts a:hover {
-            transform: scale(1.4) rotate(10deg);
-        }
 
-        /* Кнопки доната (как в оригинальном CATPON) */
-        .donate-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 40px 0;
-        }
-        .donate-btn {
-            padding: 12px 24px;
-            background: rgba(187, 134, 252, 0.2);
-            border: 2px solid #bb86fc;
-            border-radius: 12px;
-            color: #bb86fc;
-            font-size: 1.1em;
-            text-decoration: none;
+        .ios-btn i {
+            font-size: 1.25em;
             transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(187, 134, 252, 0.3);
-        }
-        .donate-btn:hover {
-            background: #bb86fc;
-            color: #121212;
-            transform: translateY(-3px);
-            box-shadow: 0 0 25px #bb86fc;
         }
 
-        .countdown-section {
-            margin: 120px auto 60px;
-            padding: 40px;
-            background: rgba(187, 134, 252, 0.15);
-            border-radius: 20px;
-            max-width: 460px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(187, 134, 252, 0.2);
+        .ios-btn .fa-chevron-right {
+            font-size: 0.85em;
+            opacity: 0.4;
+            transition: all 0.3s ease;
         }
-        .countdown-title {
-            font-size: 1.8em;
-            color: #bb86fc;
-            margin-bottom: 25px;
+
+        /* Ховеры */
+        .ios-btn-tg:hover {
+            background: rgba(0, 136, 204, 0.15);
+            border-color: rgba(0, 136, 204, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 136, 204, 0.2);
+            transform: translateY(-2px);
         }
-        .countdown {
-            font-size: 3.4em;
-            font-weight: bold;
-            letter-spacing: 6px;
-            color: #ffffff;
-            text-shadow: 0 0 20px #bb86fc;
+        .ios-btn-tg:hover .fa-telegram {
+            color: #24A1DE;
+            transform: scale(1.1);
         }
-        .countdown-label {
-            font-size: 1.1em;
+
+        .ios-btn-gh:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        .ios-btn-gh:hover .fa-github {
+            transform: scale(1.1);
+        }
+
+        .ios-btn:hover .left-side {
+            transform: translateX(3px);
+        }
+        .ios-btn:hover .fa-chevron-right {
+            transform: translateX(-3px);
             opacity: 0.8;
-            margin-top: 15px;
         }
 
-        @media (max-width: 600px) {
-            .card, .countdown-section {
-                padding: 30px 20px;
-            }
-            h1 { font-size: 2.8em; }
-            .countdown { font-size: 2.4em; }
-            .contacts { font-size: 2em; gap: 30px; }
-            .donate-buttons { flex-direction: column; align-items: center; }
+        .ios-btn:active {
+            transform: scale(0.98) translateY(0);
+        }
+
+        /* Солнечные лучи */
+        .sunlight {
+            position: absolute;
+            top: -20%;
+            right: -20%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(255,204,51,0.15) 0%, transparent 70%);
+            z-index: 2;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- Снежинки -->
-    <div class="snow-container" id="snowflakes"></div>
-
-    <!-- Гирлянды на фоне -->
-    <div class="garland" id="garlands"></div>
-
-    <!-- Основная карточка -->
-    <div class="card">
-        <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://via.placeholder.com/130/6a1b9a/ffffff?text=D'">
-
-        <h1>devodrag</h1>
-        <p class="subtitle">Разработчик Telegram-ботов и скриптов</p>
-
-        <div class="section-title"><i class="fas fa-code"></i> Технологии</div>
-        <div class="divider" id="tech-divider"></div>
-        <div class="tech-list">
-            <ul>
-                <li><strong>Основные языки:</strong> Python, JavaScript, Lua</li>
-            </ul>
-        </div>
-
-        <div class="section-title">Хобби <i class="fas fa-heart"></i></div>
-        <div class="divider" id="hobbies-divider"></div>
-        <div class="hobbies-list">
-            <ul>
-                <li><i class="fas fa-laptop-code"></i> Кодинг</li>
-            </ul>
-        </div>
-
-        <div class="section-title"><i class="fas fa-folder-open"></i> Проекты</div>
-        <div class="divider" id="projects-divider"></div>
-        <div class="projects">
-            <div class="project">
-                <h3>Frogy Price</h3>
-                <p>Курс криптовалюты каждые 5 минут</p>
-                <p><a href="https://t.me/pricesforcrypto" target="_blank"><i class="fab fa-telegram-plane"></i> https://t.me/pricesforcrypto</a></p>
-            </div>
-            <div class="project">
-                <h3>CurrencyPrice</h3>
-                <p>Курс валют каждые 30 минут</p>
-                <p><a href="https://t.me/priceforcurrency" target="_blank"><i class="fab fa-telegram-plane"></i> https://t.me/priceforcurrency</a></p>
-            </div>
-        </div>
-
-
-        <div class="contacts">
-            <a href="https://t.me/devodrag" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-            <a href="https://github.com/devodrag" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="mailto:euesswekgpt@gmail.com"><i class="fas fa-envelope"></i></a>
-        </div>
+    <!-- Жидкий фон -->
+    <div class="background-canvas">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
     </div>
+    
+    <!-- Солнечные частицы -->
+    <div class="particle-container" id="particles"></div>
 
-    <!-- Отсчёт до Нового года -->
-    <div class="countdown-section">
-        <div class="countdown-title">До 2027 года осталось</div>
-        <div class="countdown" id="countdownTimer">00 : 00 : 00 : 00</div>
-        <div class="countdown-label">дней  часов  минут  секунд</div>
+    <div class="sunlight"></div>
+
+    <!-- Основной интерфейс -->
+    <div class="glass-wrapper">
+        <div class="avatar-holder element-appear">
+            <div class="avatar-glow"></div>
+            <img src="avatar.jpg" alt="devodrag" class="avatar" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80'">
+        </div>
+
+        <h1 class="element-appear">devodrag</h1>
+        <p class="tagline element-appear">Full Stack Developer</p>
+        
+        <div class="location element-appear">
+            <i class="fas fa-location-dot" style="color: #ff4e50;"></i>
+            <span>Latvia</span>
+        </div>
+
+        <!-- Кнопки-ссылки -->
+        <div class="links-container element-appear">
+            <a href="https://t.me/swiftlose" target="_blank" class="ios-btn ios-btn-tg">
+                <div class="left-side">
+                    <i class="fab fa-telegram"></i>
+                    <span>Telegram</span>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+
+            <a href="https://github.com/devodrag" target="_blank" class="ios-btn ios-btn-gh">
+                <div class="left-side">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub</span>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
     </div>
 
     <script>
-        // Снежинки
-        const snowContainer = document.getElementById('snowflakes');
-        for (let i = 0; i < 180; i++) {
-            const snowflake = document.createElement('div');
-            snowflake.className = 'snowflake';
-            snowflake.style.left = Math.random() * 100 + 'vw';
-            snowflake.style.animationDuration = Math.random() * 12 + 12 + 's';
-            snowflake.style.animationDelay = Math.random() * 10 + 's';
-            snowflake.style.width = Math.random() * 4 + 2 + 'px';
-            snowflake.style.height = snowflake.style.width;
-            snowContainer.appendChild(snowflake);
-        }
+        // Генерируем солнечные частицы на фоне
+        const particleContainer = document.getElementById('particles');
+        const particleCount = 50;
 
-        // Гирлянды на фоне
-        const garlandContainer = document.getElementById('garlands');
-        const positions = ['10%', '28%', '46%', '64%', '82%'];
-        positions.forEach((top, index) => {
-            const line = document.createElement('div');
-            line.className = 'garland-line';
-            line.style.top = top;
-            line.style.transform = `rotate(${index % 2 === 0 ? '' : '-'}4deg)`;
-            const lights = document.createElement('div');
-            lights.className = 'lights';
-            for (let j = 0; j < 32; j++) {
-                const light = document.createElement('div');
-                light.className = 'light';
-                light.style.left = j * (100 / 32) + '%';
-                light.style.animationDelay = Math.random() * 3 + 's';
-                lights.appendChild(light);
-            }
-            line.appendChild(lights);
-            garlandContainer.appendChild(line);
-        });
-
-        // Мини-гирлянды в разделителях
-        function createMiniGarland(containerId) {
-            const container = document.getElementById(containerId);
-            const miniGarland = document.createElement('div');
-            miniGarland.className = 'mini-garland';
-            const miniLights = document.createElement('div');
-            miniLights.className = 'mini-lights';
-            for (let j = 0; j < 15; j++) {
-                const light = document.createElement('div');
-                light.className = 'mini-light';
-                light.style.left = j * (100 / 15) + '%';
-                light.style.animationDelay = Math.random() * 2.5 + 's';
-                miniLights.appendChild(light);
-            }
-            miniGarland.appendChild(miniLights);
-            container.appendChild(miniGarland);
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            const size = Math.random() * 5 + 2 + 'px';
+            particle.style.width = size;
+            particle.style.height = size;
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.animationDuration = Math.random() * 10 + 5 + 's';
+            particle.style.animationDelay = Math.random() * 10 + 's';
+            
+            particleContainer.appendChild(particle);
         }
-        createMiniGarland('tech-divider');
-        createMiniGarland('hobbies-divider');
-        createMiniGarland('projects-divider');
-
-        // Отсчёт до 2026
-        const countdownTimer = document.getElementById('countdownTimer');
-        function updateCountdown() {
-            const now = new Date();
-            const newYear = new Date(now.getFullYear() + 1, 0, 1);
-            const diff = newYear - now;
-            if (diff <= 0) {
-                countdownTimer.textContent = "С Новым 2026!";
-                return;
-            }
-            const days = Math.floor(diff / 86400000);
-            const hours = Math.floor((diff % 86400000) / 3600000);
-            const minutes = Math.floor((diff % 3600000) / 60000);
-            const seconds = Math.floor((diff % 60000) / 1000);
-            countdownTimer.innerHTML = `${days.toString().padStart(2,'0')} : ${hours.toString().padStart(2,'0')} : ${minutes.toString().padStart(2,'0')} : ${seconds.toString().padStart(2,'0')}`;
-        }
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
     </script>
+
 </body>
 </html>
